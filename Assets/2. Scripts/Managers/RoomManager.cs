@@ -21,11 +21,10 @@ public class RoomManager : MonoBehaviour
 
     public void LoadRoom(int roomNumber)
     {
-        levelComplete = false;  // ADD THIS LINE
-        
-        string path = $"Assets/5. Rooms/Room_{roomNumber}.asset";
-        currentRoomConfig = UnityEditor.AssetDatabase.LoadAssetAtPath<RoomConfig>(path);
-        
+        levelComplete = false;
+
+        currentRoomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{roomNumber}");
+
         if (currentRoomConfig == null)
         {
             Debug.LogError($"RoomConfig for Room {roomNumber} not found in Resources/Rooms/");

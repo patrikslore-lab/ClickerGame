@@ -10,22 +10,22 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b1ee948bdeb0148438627c7def88a186, type: 3}
-  m_Name: Room_1
+  m_Name: Room_3
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
-  roomNumber: 1
-  roomSprite: {fileID: 2707200778260496344, guid: 9c5bb1b92679fca4680bdd2bbdc5a1be, type: 3}
+  roomNumber: 3
+  roomSprite: {fileID: -7849066302059199514, guid: dcfefff6e387dcf4e95d6d0ce4d1946b, type: 3}
   waveSequence:
-  - waveConfig: {fileID: 11400000, guid: 4502738f426d96549b2bc8471c069fa3, type: 2}
-    timesToRepeat: 6
-  delayBetweenWaves: 5
-  minX: 14
-  maxX: -14
-  minY: -7
-  maxY: 3.5
+  - waveConfig: {fileID: 11400000, guid: 7c319319ec8b8f34c9259c05068ba9a8, type: 2}
+    timesToRepeat: 5
+  delayBetweenWaves: 3
+  minX: -8
+  maxX: 8
+  minY: -4
+  maxY: 4
   spawnZ: -1
-  woodSpawnFrequencySeconds: 2
-  lootMinX: 14
-  lootMaxX: -14
-  lootMinY: -7
-  lootMaxY: 3.5
-  lootSpawnZ: -1
+  woodSpawnFrequencySeconds: 3
+  lootMinX: -6
+  lootMaxX: 6
+  lootMinY: -3
+  lootMaxY: 3
+  lootSpawnZ: -2

@@ -10,8 +10,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameplayPanel;
     [SerializeField] private GameObject levelCompletionPanel;
     [SerializeField] private GameObject pauseMenuPanel;
-
     [SerializeField] private GameObject gameOverPanel;
+    [SerializeField] private GameObject basePanel;
+    [SerializeField] private GameObject mainMenuPanel;
+
+    [SerializeField] private GameObject upgradePanel;
 
     [SerializeField] private TextMeshProUGUI woodCountTextBox;
 
@@ -42,46 +45,98 @@ public class UIManager : MonoBehaviour
 
     public void InitializePanels()
     {
-        // Set initial state to Gameplay
-        OnGameStateChanged(GameManager.GameState.Gameplay);
+        // Hide all panels initially - GameManager will set the correct mode/state
+        HideAllPanels();
     }
-    
-    public void OnGameStateChanged(GameManager.GameState newState)
+
+    private void HideAllPanels()
     {
-        Debug.Log($"Game State Changed to: {newState}");
-        // Hide all panels first
         gameplayPanel?.SetActive(false);
         levelCompletionPanel?.SetActive(false);
         pauseMenuPanel?.SetActive(false);
         gameOverPanel?.SetActive(false);
-        
-        // Show the appropriate panel(s)
-        switch (newState)
-        {
-            case GameManager.GameState.Gameplay:
-                gameplayPanel?.SetActive(true);
-                Time.timeScale = 1f; // Resume game
-                break;
-                
-            case GameManager.GameState.LevelComplete:
-                gameplayPanel?.SetActive(true); // Keep gameplay UI visible
-                levelCompletionPanel?.SetActive(true);
-                Time.timeScale = 0f; // Pause game
-                break;
-                
-            case GameManager.GameState.Paused:
-                gameplayPanel?.SetActive(true); // Keep gameplay UI visible
-                pauseMenuPanel?.SetActive(true);
-                Time.timeScale = 0f; // Pause game
-                break;
-            case GameManager.GameState.GameOver:
-                gameplayPanel?.SetActive(false);
-                pauseMenuPanel?.SetActive(false);
-                gameOverPanel?.SetActive(false);
-                break;
+        basePanel?.SetActive(false);
+        mainMenuPanel?.SetActive(false);
+        upgradePanel?.SetActive(false);
+    }
 
+    // Called when GameMode changes (MainMenu, Base, Combat)
+    public void OnGameModeChanged(GameManager.GameMode newMode)
+    {
+        Debug.Log($"UI: GameMode changed to {newMode}");
+        // Mode changes are handled by OnGameStateChanged with the mode parameter
+    }
+
+    // Called when GameState changes (Playing, Paused, LevelComplete, GameOver)
+    public void OnGameStateChanged(GameManager.GameState newState, GameManager.GameMode currentMode)
+    {
+        Debug.Log($"UI: GameState changed to {newState} in mode {currentMode}");
+
+        // Hide all panels first
+        HideAllPanels();
+
+        // Show appropriate panels based on BOTH mode and state
+        if (currentMode == GameManager.GameMode.MainMenu)
+        {
+            mainMenuPanel?.SetActive(true);
+            Debug.Log("Showing mainMenuPanel");
+            return;
+        }
+
+        if (currentMode == GameManager.GameMode.Base)
+        {
+            switch (newState)
+            {
+                case GameManager.GameState.Playing:
+                    if (basePanel != null)
+                    {
+                        basePanel.SetActive(true);
+                        gameplayPanel?.SetActive(true);
+                    }
+                    else
+                    {
+                        Debug.LogError("basePanel is NULL! Assign it in UIManager Inspector.");
+                    }
+                    break;
+                case GameManager.GameState.Paused:
+                    basePanel?.SetActive(true);
+                    pauseMenuPanel?.SetActive(true);
+                    Debug.Log("Showing basePanel + pauseMenuPanel");
+                    break;
+            }
+            return;
+        }
+
+        if (currentMode == GameManager.GameMode.Combat)
+        {
+            switch (newState)
+            {
+                case GameManager.GameState.Playing:
+                    gameplayPanel?.SetActive(true);
+                    break;
+
+                case GameManager.GameState.Paused:
+                    gameplayPanel?.SetActive(true); // Keep gameplay UI visible
+                    pauseMenuPanel?.SetActive(true);
+                    break;
+
+                case GameManager.GameState.LevelComplete:
+                    gameplayPanel?.SetActive(true); // Keep gameplay UI visible
+                    levelCompletionPanel?.SetActive(true);
+                    break;
+
+                case GameManager.GameState.GameOver:
+                    gameOverPanel?.SetActive(true);
+                    break;
+            }
         }
     }
+
+    public void Upgrading()
+    {
+        upgradePanel.SetActive(true);
+    }
+
     public void UpdateWoodCountUI(float totalWood)
     {
         if (woodCountTextBox != null)

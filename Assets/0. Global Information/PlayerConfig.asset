@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
   corePieces: 0
-  wood: 0
-  currentLevel: 1
+  wood: -390
+  currentLevel: 0
   ricochetCooldown: 2
   ricochetProjectileSpeed: 20
   ricochetMaxActiveTime: 20

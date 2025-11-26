@@ -60,7 +60,7 @@ public class InputManager : MonoBehaviour
         {
             HandleClick();
         }
-
+        
         UpdateCrosshairPosition();
 
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -151,24 +151,39 @@ public class InputManager : MonoBehaviour
     private void TogglePause()
     {
         GameManager.GameState currentState = GameManager.Instance.CurrentGameState;
-        
-        if (currentState == GameManager.GameState.Gameplay)
+        GameManager.GameMode currentMode = GameManager.Instance.CurrentGameMode;
+
+        // Don't allow pausing in MainMenu
+        if (currentMode == GameManager.GameMode.MainMenu)
+            return;
+
+        if (currentState == GameManager.GameState.Playing)
         {
             GameManager.Instance.SetGameState(GameManager.GameState.Paused);
-            RoomManager roomManager = FindAnyObjectByType<RoomManager>();
-            if (roomManager != null)
+
+            // Only pause waves if we're in Combat mode
+            if (currentMode == GameManager.GameMode.Combat)
             {
-                roomManager.PauseWaves();
+                RoomManager roomManager = FindAnyObjectByType<RoomManager>();
+                if (roomManager != null)
+                {
+                    roomManager.PauseWaves();
+                }
             }
         }
         else if (currentState == GameManager.GameState.Paused)
         {
-            GameManager.Instance.SetGameState(GameManager.GameState.Gameplay);
-            RoomManager roomManager = FindAnyObjectByType<RoomManager>();
-            if (roomManager != null)
+            GameManager.Instance.SetGameState(GameManager.GameState.Playing);
+
+            // Only resume waves if we're in Combat mode
+            if (currentMode == GameManager.GameMode.Combat)
             {
-                roomManager.ResumeWaves();
+                RoomManager roomManager = FindAnyObjectByType<RoomManager>();
+                if (roomManager != null)
+                {
+                    roomManager.ResumeWaves();
+                }
             }
         }
-}
+    }
 }

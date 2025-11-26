@@ -11,6 +11,8 @@ public class SpawnManagerScript : MonoBehaviour
 
     [SerializeField] private GameObject floatingTextPrefab;
 
+    [SerializeField] private GameObject baseDoggy;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -107,6 +109,21 @@ public class SpawnManagerScript : MonoBehaviour
         {
             floatingTextComponent.Initialize();
         }
+    }
+
+    public void SpawnBaseDoggy()
+    {
+        PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
+
+        playerConfig.wood -= 30;
+
+        UIManager.Instance.UpdateWoodCountUI(playerConfig.wood);
+
+        float RandomX = Random.Range(-14, 14);
+        float RandomY = Random.Range (-7, 3.5f);
+        Vector3 randomPos = new Vector3 (RandomX, RandomY);
+        Instantiate(baseDoggy, randomPos, Quaternion.identity);
+
     }
 }
 

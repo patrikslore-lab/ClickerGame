@@ -38,6 +38,10 @@ public class LightManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Only run light mechanics during Combat mode
+        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+            return;
+
         DisplayLightHealth();
         if (LightHealth.value <= 0 && !isGameOver)
         {
@@ -54,32 +58,22 @@ public class LightManager : MonoBehaviour
 
     private void GameOver()
     {
-        // Create Canvas
-        GameObject canvasObj = new GameObject("GameOverCanvas");
-        Canvas canvas = canvasObj.AddComponent<Canvas>();
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        canvasObj.transform.position = Vector3.zero;
-        
-        // Create TextMeshPro text
-        GameObject textObj = new GameObject("GameOverText");
-        textObj.transform.SetParent(canvasObj.transform);
-        textObj.transform.localPosition = new Vector3(0, 0, -2);
-        //textObj.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-        
-        TextMeshProUGUI textMeshPro = textObj.AddComponent<TextMeshProUGUI>();
-        textMeshPro.text = "GAME OVER";
-        textMeshPro.alignment = TextAlignmentOptions.Center;
-        textMeshPro.color = Color.red;
-        textMeshPro.fontSize = 60;  // Large font size = sharp text
-        textObj.layer = LayerMask.NameToLayer("UI");
-        
-        // Set size
-        RectTransform rectTransform = textObj.GetComponent<RectTransform>();
-        rectTransform.sizeDelta = new Vector2(400, 200);
-        
-        
-        Debug.Log("Game Over!");
-        Time.timeScale = 0f;
+        Debug.Log("Player defeated - returning to base");
+
+        // Reset game over flag for next combat
+        isGameOver = false;
+
+        // Set game state to GameOver (will show game over panel)
+        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+
+        // Optional: Reset player to level 1 on death (roguelike style)
+        // Uncomment if you want death to reset progress:
+        // PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
+        // playerConfig.currentLevel = 1;
+
+        // Return to base area after a brief delay (so player can see game over screen)
+        // Or you can add a "Return to Base" button on the game over panel
+        // For now, we'll just set the state - add button later to call LoadBaseArea()
     }
 
     void DisplayLightHealth()
@@ -125,6 +119,10 @@ public class LightManager : MonoBehaviour
     }
     public void LightDestruction(Enemy enemy)
     {
+        // Only process light damage during Combat mode
+        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+            return;
+
         // Determine reduction rate based on enemy type
         float reductionRate = GetReductionRateForEnemy(enemy);
 
@@ -134,6 +132,10 @@ public class LightManager : MonoBehaviour
 
     void LightAddition(Enemy enemy)
     {
+        // Only process light rewards during Combat mode
+        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+            return;
+
         float lightReward = GetRewardRateForEnemy(enemy);
 
         if (lightHealthNumber < lightHealthNumberMax)

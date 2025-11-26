@@ -15,8 +15,8 @@ MonoBehaviour:
   roomNumber: 2
   roomSprite: {fileID: 5830712228245648474, guid: c4a79a4eb51aa4b4f9214e61b73c5380, type: 3}
   waveSequence:
-  - waveConfig: {fileID: 11400000, guid: 6f7ada33d2a57004a8c453eb0acf2998, type: 2}
-    timesToRepeat: 1
+  - waveConfig: {fileID: 11400000, guid: e0ec54d05934a8e4ba560aa61cd74ec6, type: 2}
+    timesToRepeat: 4
   delayBetweenWaves: 3
   minX: -8
   maxX: 8
