@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7587f1139e915784ca9c57499699df6f, type: 3}
+  m_Name: Enemy1Config
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyConfig
+  enemyPrefab: {fileID: 2873433846099291731, guid: 5c2186da6430ab8409913d84b578ea7d, type: 3}
+  startDelay: 2
+  spawnRate: 1.5
+  randomSpawnVariation: 1
+  minX: -2.5
+  maxX: 2.5
+  minY: -2.5
+  maxY: 2.5
+  spawnZ: -1
+  movementType: 0
+  floatHeight: 2
+  floatDuration: 5
+  moveDirection: {x: 0, y: 0, z: 0}
+  moveSpeed: 5

@@ -1,0 +1,22 @@
+{
+    "name": "Unity.AI.Toolkit.Compliance",
+    "rootNamespace": "Unity.AI.Toolkit.Compliance",
+    "references": [],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.ai.toolkit",
+            "expression": "[0,1.0.0)",
+            "define": "UNITY_AI_ASSET_LABEL_FIX"
+        }
+    ],
+    "noEngineReferences": false
+}

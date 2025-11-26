@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b1ee948bdeb0148438627c7def88a186, type: 3}
+  m_Name: Room_1
+  m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
+  roomNumber: 1
+  roomSprite: {fileID: 2707200778260496344, guid: 9c5bb1b92679fca4680bdd2bbdc5a1be, type: 3}
+  waveSequence:
+  - waveConfig: {fileID: 11400000, guid: 3c80f10755ed3c547b4a0586f37ac4ff, type: 2}
+    timesToRepeat: 15
+  delayBetweenWaves: 3
+  minX: 14
+  maxX: -14
+  minY: -7
+  maxY: 3.5
+  spawnZ: -1
+  woodSpawnFrequencySeconds: 2
+  lootMinX: 14
+  lootMaxX: -14
+  lootMinY: -7
+  lootMaxY: 3.5
+  lootSpawnZ: -1
