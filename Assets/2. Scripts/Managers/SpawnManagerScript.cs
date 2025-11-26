@@ -26,13 +26,6 @@ public class SpawnManagerScript : MonoBehaviour
     public void SpawnEnemy(EnemyConfig config, Vector3 position, RoomConfig roomConfig)
     {
         GameObject enemy = Instantiate(config.enemyPrefab, position, Quaternion.identity);
-
-        // Apply movement behavior
-        EnemyMovement enemyMovement = enemy.GetComponent<EnemyMovement>();
-        if (enemyMovement != null)
-        {
-            enemyMovement.ApplyMovement(config, roomConfig);
-        }
     } 
     public Vector3 CalculateSpawnPosition(RoomConfig roomConfig)
     {

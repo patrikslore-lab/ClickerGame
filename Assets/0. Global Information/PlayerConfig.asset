@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1543e922d30dcf7409908a19e34d328b, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
-  corePieces: 87
-  wood: 104
+  corePieces: 95
+  wood: 136
   currentLevel: 1
   ricochetCooldown: 2
   ricochetProjectileSpeed: 20
   ricochetMaxActiveTime: 20
   woodDropAmount: 4
   corePieceAmount: 1
-  flyingRatLightReductionRate: 0.84
+  flyingRatLightReductionRate: 0
   bringerOfDeathLightReductionRate: 2
   flyingRatLightRewardRate: 2
   bringerOfDeathLightRewardRate: 1

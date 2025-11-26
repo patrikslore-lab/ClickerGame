@@ -152,6 +152,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FlyingRat
   enemyConfig: {fileID: 11400000, guid: 7eef06d686c884443840ad427b1d4c1d, type: 2}
+  minDistance: 10
+  maxDistance: 10
+  moveSpeed: 10
+  pauseDuration: 0.5
+  arcHeight: 1
 --- !u!95 &-443835194522798762
 Animator:
   serializedVersion: 7

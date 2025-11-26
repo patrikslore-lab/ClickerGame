@@ -15,5 +15,5 @@ MonoBehaviour:
   waveName: Wave5 - RatWave
   enemiesToSpawn:
   - enemyConfig: {fileID: 11400000, guid: 7eef06d686c884443840ad427b1d4c1d, type: 2}
-    spawnCount: 4
+    spawnCount: 2
   spawnVariation: 0.1
