@@ -22,8 +22,10 @@ public class PlayerConfig : ScriptableObject
     [Header("Enemy Light Reduction Ratez")]
     public float flyingRatLightReductionRate = 0.2f;
     public float bringerOfDeathLightReductionRate = 0.5f;
+    public float crowooonLightReductionRate = 1f;
 
     [Header("Enemy Light Reward Rates")]
     public float flyingRatLightRewardRate = 0.5f;
     public float bringerOfDeathLightRewardRate = 1f;
+    public float crowooonLightRewardRate = 1f;
 }

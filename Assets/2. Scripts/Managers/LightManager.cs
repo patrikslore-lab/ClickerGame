@@ -99,6 +99,8 @@ public class LightManager : MonoBehaviour
                 return playerConfig.flyingRatLightReductionRate;
             case "BringerOfDeathEnemy":
                 return playerConfig.bringerOfDeathLightReductionRate;
+            case "Crowooon":
+                return playerConfig.crowooonLightReductionRate;
             default:
                 return lightReductionRate;  // Default fallback
         }
@@ -115,6 +117,8 @@ public class LightManager : MonoBehaviour
                 return playerConfig.flyingRatLightRewardRate;
             case "BringerOfDeathEnemy":
                 return playerConfig.bringerOfDeathLightRewardRate;
+            case "Crowooon":
+                return playerConfig.crowooonLightRewardRate;
             default:
                 return lightRewardRate;  // Default fallback
         }

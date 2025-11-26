@@ -55,6 +55,7 @@
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TMP_TextSelector_A.cs" />
     <Compile Include="Assets\2. Scripts\HighScoreHandler.cs" />
     <Compile Include="Assets\2. Scripts\Config Scripts\RoomConfig.cs" />
+    <Compile Include="Assets\2. Scripts\Nenemies\Crowooon.cs" />
     <Compile Include="Assets\2. Scripts\Config Scripts\PlayerConfig.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
     <Compile Include="Assets\2. Scripts\Managers\UIManager.cs" />

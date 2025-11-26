@@ -480,6 +480,7 @@
 "Assets/2. Scripts/Managers/UIManager.cs"
 "Assets/2. Scripts/Managers/UpgradeManager.cs"
 "Assets/2. Scripts/Nenemies/BringerofDeath.cs"
+"Assets/2. Scripts/Nenemies/Crowooon.cs"
 "Assets/2. Scripts/Nenemies/Enemy.cs"
 "Assets/2. Scripts/Nenemies/FlyingRat.cs"
 "Assets/2. Scripts/Nenemies/Splittee.cs"
