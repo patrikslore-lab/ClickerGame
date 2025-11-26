@@ -19,7 +19,7 @@ public class PlayerConfig : ScriptableObject
     public int woodDropAmount = 3;
     public int corePieceAmount = 1;
 
-    [Header("Enemy Light Reduction Rates")]
+    [Header("Enemy Light Reduction Ratez")]
     public float flyingRatLightReductionRate = 0.2f;
     public float bringerOfDeathLightReductionRate = 0.5f;
 
