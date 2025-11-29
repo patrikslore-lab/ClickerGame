@@ -39,7 +39,7 @@ public class LightManager : MonoBehaviour
     void Update()
     {
         // Only run light mechanics during Combat mode
-        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
             return;
 
         DisplayLightHealth();
@@ -120,7 +120,7 @@ public class LightManager : MonoBehaviour
     public void LightDestruction(Enemy enemy)
     {
         // Only process light damage during Combat mode
-        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
             return;
 
         // Determine reduction rate based on enemy type
@@ -133,7 +133,7 @@ public class LightManager : MonoBehaviour
     void LightAddition(Enemy enemy)
     {
         // Only process light rewards during Combat mode
-        if (GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
             return;
 
         float lightReward = GetRewardRateForEnemy(enemy);

@@ -13,7 +13,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private GameObject basePanel;
     [SerializeField] private GameObject mainMenuPanel;
-
+    [SerializeField] private GameObject startGamePanel;
     [SerializeField] private GameObject upgradePanel;
 
     [SerializeField] private TextMeshProUGUI woodCountTextBox;
@@ -38,9 +38,22 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+        if (GameManager.Instance == null)
+        {
+            Debug.LogError("GameManager.Instance is null in UIManager.Start()!");
+            return;
+        }
+
         PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
-        UpdateWoodCountUI(playerConfig.wood);
-        UpdateCoreCountUI(playerConfig.corePieces);
+        if (playerConfig != null)
+        {
+            UpdateWoodCountUI(playerConfig.wood);
+            UpdateCoreCountUI(playerConfig.corePieces);
+        }
+        else
+        {
+            Debug.LogError("PlayerConfig is null! Assign it in GameManager Inspector.");
+        }
     }
 
     public void InitializePanels()
@@ -58,28 +71,31 @@ public class UIManager : MonoBehaviour
         basePanel?.SetActive(false);
         mainMenuPanel?.SetActive(false);
         upgradePanel?.SetActive(false);
+        startGamePanel?.SetActive(false);
     }
 
     // Called when GameMode changes (MainMenu, Base, Combat)
     public void OnGameModeChanged(GameManager.GameMode newMode)
     {
-        Debug.Log($"UI: GameMode changed to {newMode}");
         // Mode changes are handled by OnGameStateChanged with the mode parameter
     }
 
     // Called when GameState changes (Playing, Paused, LevelComplete, GameOver)
     public void OnGameStateChanged(GameManager.GameState newState, GameManager.GameMode currentMode)
     {
-        Debug.Log($"UI: GameState changed to {newState} in mode {currentMode}");
-
         // Hide all panels first
         HideAllPanels();
 
         // Show appropriate panels based on BOTH mode and state
         if (currentMode == GameManager.GameMode.MainMenu)
         {
-            mainMenuPanel?.SetActive(true);
-            Debug.Log("Showing mainMenuPanel");
+            if (mainMenuPanel == null)
+            {
+                Debug.LogError("mainMenuPanel is NULL! Assign it in UIManager Inspector.");
+                return;
+            }
+
+            mainMenuPanel.SetActive(true);
             return;
         }
 

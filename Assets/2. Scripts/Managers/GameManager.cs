@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     // WHERE the player is (area/scene context)
     public enum GameMode
     {
-        MainMenu,
+        MainMenu, 
         Base,
         Combat
     }
@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     // Player Config (holds all player data)
     [SerializeField] private PlayerConfig playerConfig;
 
-    private GameMode currentGameMode = GameMode.MainMenu;
+    private GameMode currentGameMode = GameMode.Base; // Start with Base, will transition to MainMenu in Start()
     private GameState currentGameState = GameState.Playing;
 
     public GameMode CurrentGameMode => currentGameMode;
@@ -46,15 +46,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("GameManager.Start() called");
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.InitializePanels();
+        }
+        else
+        {
+            Debug.LogError("UIManager.Instance is null in GameManager.Start()!");
+        }
 
-        UIManager.Instance.InitializePanels();
-
-        // Start in Base area
-        // TODO: Change this to MainMenu when you add main menu screen
-        Debug.Log("About to call LoadBaseArea()");
-        LevelManager.Instance.LoadBaseArea();
-        Debug.Log("LoadBaseArea() completed");
+        SetGameMode(GameMode.MainMenu);
     }
 
     //Gamestate logic handling
@@ -65,7 +66,6 @@ public class GameManager : MonoBehaviour
 
         currentGameMode = newMode;
         OnGameModeChanged(newMode);
-        Debug.Log($"GameMode changed to: {newMode}");
     }
 
     public void SetGameState(GameState newState)
@@ -117,6 +117,17 @@ public class GameManager : MonoBehaviour
     {
         playerConfig.currentLevel = levelNumber;
         LevelManager.Instance.LoadLevel(levelNumber);
+    }
+
+    public void StartGame()
+    {
+        SetGameMode(GameMode.Base);
+    }
+
+    public void StartCombat()
+    {
+        SetGameMode(GameMode.Combat);
+        LevelManager.Instance.LoadLevel(1);
     }
     //---------------------------------------------------
     public PlayerConfig GetPlayerConfig()

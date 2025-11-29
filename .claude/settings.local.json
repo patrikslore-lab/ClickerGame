@@ -5,7 +5,8 @@
       "Bash(nul)",
       "Bash(xargs ls:*)",
       "Bash(tree:*)",
-      "Bash(powershell -Command:*)"
+      "Bash(powershell -Command:*)",
+      "Bash(findstr:*)"
     ],
     "deny": [],
     "ask": []

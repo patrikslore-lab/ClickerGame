@@ -51,16 +51,34 @@ public class InputManager : MonoBehaviour
                 crosshairRenderer.enabled = true;
             }
         }
-        Cursor.visible = false;
     }
 
     private void Update()
     {
+        // Manage cursor and crosshair visibility based on game mode
+        bool isMainMenu = GameManager.Instance != null && GameManager.Instance.CurrentGameMode == GameManager.GameMode.MainMenu;
+
+        if (isMainMenu)
+        {
+            Cursor.visible = true;
+            if (crosshairRenderer != null)
+                crosshairRenderer.enabled = false;
+        }
+        else
+        {
+            Cursor.visible = false;
+            if (crosshairRenderer != null)
+                crosshairRenderer.enabled = true;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
-            HandleClick();
+            if (!isMainMenu)
+            {
+                HandleClick();
+            }
         }
-        
+
         UpdateCrosshairPosition();
 
         if (Input.GetKeyDown(KeyCode.Escape))
