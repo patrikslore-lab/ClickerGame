@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
+using System;
 
 public class LightManager : MonoBehaviour
 {
@@ -19,13 +21,22 @@ public class LightManager : MonoBehaviour
     
     [SerializeField] float lightHealthNumber;
 
+    [Header("Light Flicker Settings")]
+    [SerializeField] private float flickerFrequency = 1.0f;      // Speed of animation (how fast it changes)
+    [SerializeField] private float flickerAmplitude = 0.2f;       // How much the light varies
+    [SerializeField] private float flickerPhaseOffset = 0.0f;     // Starting position in noise field
+    [SerializeField] private float noiseDetail = 1.0f;            // Detail level (1=smooth, higher=more variation)
+    [SerializeField] private float noiseVariation = 0.0f;         // Different noise pattern (try 0, 50, 100, etc.)
+
+    private float actualInnerRadius;  // True radius without flicker effect
+    private float actualOuterRadius;  // True radius without flicker effect
+
     private PlayerConfig playerConfig;
 
     private float timeTaken;
  
     private bool isGameOver = false;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         lightSettings = GetComponent<Light2D>();
@@ -33,6 +44,12 @@ public class LightManager : MonoBehaviour
         EventManager.Instance.CoreHit += LightAddition;
         lightHealthNumberMax = (lightSettings.pointLightOuterRadius + lightSettings.pointLightInnerRadius)/2;
         playerConfig = GameManager.Instance.GetPlayerConfig();
+
+        // Initialize actual radius values
+        actualInnerRadius = lightSettings.pointLightInnerRadius;
+        actualOuterRadius = lightSettings.pointLightOuterRadius;
+
+        StartCoroutine(LightFlicker(lightSettings));
     }
 
     // Update is called once per frame
@@ -64,12 +81,10 @@ public class LightManager : MonoBehaviour
         isGameOver = false;
 
         // Set game state to GameOver (will show game over panel)
-        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
 
-        // Optional: Reset player to level 1 on death (roguelike style)
-        // Uncomment if you want death to reset progress:
-        // PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
-        // playerConfig.currentLevel = 1;
+        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+        PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
+        playerConfig.currentLevel = 1;
 
         // Return to base area after a brief delay (so player can see game over screen)
         // Or you can add a "Return to Base" button on the game over panel
@@ -78,7 +93,8 @@ public class LightManager : MonoBehaviour
 
     void DisplayLightHealth()
     {
-        lightHealthNumber = (lightSettings.pointLightOuterRadius + lightSettings.pointLightInnerRadius)/2;
+        // Use actual radius (without flicker) for health calculation
+        lightHealthNumber = (actualOuterRadius + actualInnerRadius)/2;
         LightHealth.value = lightHealthNumber / lightHealthNumberMax;
     }
 
@@ -126,8 +142,9 @@ public class LightManager : MonoBehaviour
         // Determine reduction rate based on enemy type
         float reductionRate = GetReductionRateForEnemy(enemy);
 
-        lightSettings.pointLightOuterRadius -= reductionRate * Time.deltaTime;
-        lightSettings.pointLightInnerRadius -= reductionRate * Time.deltaTime;
+        // Modify actual radius (flicker will be applied on top)
+        actualOuterRadius -= reductionRate * Time.deltaTime;
+        actualInnerRadius -= reductionRate * Time.deltaTime;
     }
 
     void LightAddition(Enemy enemy)
@@ -140,8 +157,39 @@ public class LightManager : MonoBehaviour
 
         if (lightHealthNumber < lightHealthNumberMax)
         {
-            lightSettings.pointLightOuterRadius += lightReward;
-            lightSettings.pointLightInnerRadius += lightReward;
+            // Modify actual radius (flicker will be applied on top)
+            actualOuterRadius += lightReward;
+            actualInnerRadius += lightReward;
+        }
+    }
+
+    IEnumerator LightFlicker(Light2D lightSettings)
+    {
+        float time = flickerPhaseOffset; // Use phase offset as starting position
+
+        while(true)
+        {
+            // Sample Perlin noise with separated speed and detail
+            // X axis: time-based animation (controlled by flickerFrequency)
+            // Y axis: variation pattern (controlled by noiseVariation)
+            float noiseX = time * flickerFrequency;
+            float noiseY = noiseVariation + (time * noiseDetail);
+            float noiseValue = Mathf.PerlinNoise(noiseX, noiseY);
+
+            // Remap from [0,1] to [-1,1] for symmetric oscillation around the base radius
+            float normalizedNoise = (noiseValue - 0.5f) * 2f;
+
+            // Apply amplitude to get final offset
+            float radiusOffset = flickerAmplitude * normalizedNoise;
+
+            // Apply flicker offset to the actual radius values
+            lightSettings.pointLightInnerRadius = actualInnerRadius + radiusOffset;
+            lightSettings.pointLightOuterRadius = actualOuterRadius + radiusOffset;
+
+            // Increment time
+            time += Time.deltaTime;
+
+            yield return null; // Wait one frame
         }
     }
 }

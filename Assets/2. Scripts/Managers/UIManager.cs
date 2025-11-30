@@ -20,9 +20,17 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI coreCountTextBox;
 
+    [SerializeField] public TextMeshProUGUI juneCooldownTextBox;
+
     [SerializeField] private Image RicochetOnImage;
     [SerializeField] private Image RicochetCooldownImage;
     [SerializeField] private Image RicochetAvailableImage;
+
+    [SerializeField] private Image LooterOnImage;
+    [SerializeField] private Image LooterCooldownImage;
+    [SerializeField] private Image LooterAvailableImage;
+
+    private PlayerConfig playerConfig;
 
     private void Awake()
     {
@@ -44,7 +52,7 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
+        playerConfig = GameManager.Instance.GetPlayerConfig();
         if (playerConfig != null)
         {
             UpdateWoodCountUI(playerConfig.wood);
@@ -54,6 +62,18 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("PlayerConfig is null! Assign it in GameManager Inspector.");
         }
+    }
+
+    void Update()
+    {
+        if (!CooldownController.Instance.IsOnCooldown)
+        {
+        juneCooldownTextBox.text = "READY";
+        } 
+        else
+        {
+        juneCooldownTextBox.text = $"{CooldownController.Instance.CooldownRemaining:F0}";
+        }   
     }
 
     public void InitializePanels()
@@ -183,5 +203,35 @@ public class UIManager : MonoBehaviour
         RicochetOnImage.enabled = false;
         RicochetCooldownImage.enabled = false;
         RicochetAvailableImage.enabled = true;
+    }
+
+    public void LooterActivate()
+    {
+        if (LooterOnImage != null)
+        {
+            LooterOnImage.enabled = true;
+            LooterCooldownImage.enabled = false;
+            LooterAvailableImage.enabled = false;
+        }
+    }
+
+    public void LooterOnCooldown()
+    {
+        if (LooterCooldownImage != null)
+        {
+            LooterOnImage.enabled = false;
+            LooterCooldownImage.enabled = true;
+            LooterAvailableImage.enabled = false;
+        }
+    }
+
+    public void LooterAvailable()
+    {
+        if (LooterAvailableImage != null)
+        {
+            LooterOnImage.enabled = false;
+            LooterCooldownImage.enabled = false;
+            LooterAvailableImage.enabled = true;
+        }
     }
 }

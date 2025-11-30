@@ -12,17 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1543e922d30dcf7409908a19e34d328b, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
-  corePieces: 0
-  wood: -390
-  currentLevel: 0
-  ricochetCooldown: 2
-  ricochetProjectileSpeed: 20
-  ricochetMaxActiveTime: 20
+  corePieces: 47
+  wood: 80
+  currentLevel: 1
+  ricochetMaxActiveTime: 100
+  looterMaxActiveTime: 100
   woodDropAmount: 4
   corePieceAmount: 1
   flyingRatLightReductionRate: 2
-  bringerOfDeathLightReductionRate: 2
+  bringerOfDeathLightReductionRate: 0
   crowooonLightReductionRate: 0.5
   flyingRatLightRewardRate: 2
   bringerOfDeathLightRewardRate: 1
   crowooonLightRewardRate: 1
+  juneCooldown: 20
+  juneHomePosition: {x: -6, y: -8, z: 0}
+  juneIdleMovementRadius: 0.5
+  juneIdleMovementSpeed: 1
+  juneMoveSpeed: 40

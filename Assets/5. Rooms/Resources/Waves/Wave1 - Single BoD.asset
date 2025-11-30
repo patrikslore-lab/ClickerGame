@@ -16,4 +16,4 @@ MonoBehaviour:
   enemiesToSpawn:
   - enemyConfig: {fileID: 11400000, guid: 97c8e29bae001764789c7e5d71bb0847, type: 2}
     spawnCount: 1
-  spawnVariation: 0.2
+  spawnVariation: 0.3

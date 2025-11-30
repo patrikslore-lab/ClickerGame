@@ -1,7 +1,8 @@
 using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
-public class RicochetAbility : MonoBehaviour
+public class RicochetAbility : BaseAbility
 {
     private enum RicochetState
     {
@@ -9,24 +10,15 @@ public class RicochetAbility : MonoBehaviour
         Active,
         OnCooldown
     }
-    [SerializeField] private GameObject projectilePrefab;
-    private PlayerConfig playerConfig; //player config file that holds all values (for future upgrading)
-    private static RicochetAbility instance;
     private RicochetState currentState = RicochetState.Inactive;
     private float activeTimer = 0f;
-    private float cooldownTimer = 0f;
 
     public bool IsActive => currentState == RicochetState.Active;
 
-    private void Awake()
+    protected override void Start()
     {
-        instance = this;
-    }
-
-    private void Start()
-    {
+        base.Start();
         EventManager.Instance.OnEnemyHit += ProcessRicochet;
-        playerConfig = GameManager.Instance.GetPlayerConfig();
     }
 
     private void OnDestroy()
@@ -39,39 +31,29 @@ public class RicochetAbility : MonoBehaviour
         // Input handling
         if (Input.GetKeyDown(KeyCode.R))
         {
+            if (!CanUseAbility())
+            {
+                Debug.Log("I'M ON COOLDOWN YA FANNY");
+                return;
+            }
+
             if (currentState == RicochetState.Inactive)
             {
                 ActivateRicochet();
             }
             else if (currentState == RicochetState.Active)
             {
-                StartCooldown();
-            }
-            else if (currentState == RicochetState.OnCooldown)
-            {
-                Debug.Log("I'M ON COOLDOWN YA FANNY");
+                DeactivateRicochet();
             }
         }
 
-        // Handle auto-deactivation after 3 seconds
+        // Handle auto-deactivation after max active time
         if (currentState == RicochetState.Active)
         {
             activeTimer += Time.deltaTime;
             if (activeTimer >= playerConfig.ricochetMaxActiveTime)
             {
-                StartCooldown();
-            }
-        }
-
-        //  Handle cooldown countdown
-        if (currentState == RicochetState.OnCooldown)
-        {
-            cooldownTimer += Time.deltaTime;
-            if (cooldownTimer >= playerConfig.ricochetCooldown)
-            {
-                currentState = RicochetState.Inactive;
-                UIManager.Instance.RicochetAvailable();
-                Debug.Log("Ricochet cooldown complete - AVAILABLE");
+                DeactivateRicochet();
             }
         }
     }
@@ -84,10 +66,10 @@ public class RicochetAbility : MonoBehaviour
         Debug.Log("Ricochet ability: ACTIVE");
     }
 
-    private void StartCooldown()
+    private void DeactivateRicochet()
     {
-        currentState = RicochetState.OnCooldown;
-        cooldownTimer = 0f;
+        currentState = RicochetState.Inactive;
+        base.StartCooldown();
         UIManager.Instance.RicochetOnCooldown();
         Debug.Log("Ricochet deactivated - COOLDOWN started");
     }
@@ -95,43 +77,44 @@ public class RicochetAbility : MonoBehaviour
     public void ProcessRicochet(Enemy hitEnemy)
     {
         if (currentState != RicochetState.Active) return;
+        if (juneCharacter.IsPerformingAbility) return; // June is busy with another ricochet
 
+        StartCoroutine(PerformRicochetSequence(hitEnemy));
+    }
+
+    private IEnumerator PerformRicochetSequence(Enemy hitEnemy)
+    {
+        // Take control of June
+        juneCharacter.StartAbilityControl();
+
+        // Find closest enemies
         Enemy[] allEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
         Enemy[] closestEnemies = FindClosestEnemies(hitEnemy, allEnemies, 2);
 
-        if (closestEnemies.Length == 0)
+        // 1. Fly to clicked enemy
+        float flyDuration = Vector3.Distance(juneCharacter.JuneInstance.transform.position, hitEnemy.transform.position) / playerConfig.juneMoveSpeed;
+        yield return juneCharacter.MoveJuneToPosition(hitEnemy.transform.position, flyDuration);
+
+        // 2. Fly to 1st closest enemy and hit it
+        if (closestEnemies.Length > 0 && closestEnemies[0] != null && !closestEnemies[0].IsDead())
         {
-            Debug.LogWarning("Ricochet: No other enemies to bounce to");
-            return;
+            float duration1 = Vector3.Distance(juneCharacter.JuneInstance.transform.position, closestEnemies[0].transform.position) / playerConfig.juneMoveSpeed;
+            yield return juneCharacter.MoveJuneToPosition(closestEnemies[0].transform.position, duration1);
+            closestEnemies[0].OnEnemyClicked();
+            Debug.Log($"June ricochet hit: {closestEnemies[0].name}");
         }
 
-        foreach (Enemy enemy in closestEnemies)
+        // 3. Fly to 2nd closest enemy and hit it
+        if (closestEnemies.Length > 1 && closestEnemies[1] != null && !closestEnemies[1].IsDead())
         {
-            if (enemy != null && !enemy.IsDead())
-            {
-                SpawnProjectile(hitEnemy, enemy);
-                Debug.Log($"Ricochet projectile spawned toward: {enemy.name}");
-            }
-        }
-    }
-
-    private void SpawnProjectile(Enemy fromEnemy, Enemy targetEnemy)
-    {
-        Collider2D fromCollider = fromEnemy.GetComponent<Collider2D>();
-        Vector3 spawnPosition = fromEnemy.transform.position;
-
-        if (fromCollider != null)
-        {
-            spawnPosition = fromCollider.bounds.center;
+            float duration2 = Vector3.Distance(juneCharacter.JuneInstance.transform.position, closestEnemies[1].transform.position) / playerConfig.juneMoveSpeed;
+            yield return juneCharacter.MoveJuneToPosition(closestEnemies[1].transform.position, duration2);
+            closestEnemies[1].OnEnemyClicked();
+            Debug.Log($"June ricochet hit: {closestEnemies[1].name}");
         }
 
-        GameObject projectileObj = Instantiate(projectilePrefab, spawnPosition, Quaternion.identity);
-        RicochetProjectile projectile = projectileObj.GetComponent<RicochetProjectile>();
-
-        if (projectile != null)
-        {
-            projectile.Initialize(targetEnemy, playerConfig.ricochetProjectileSpeed);
-        }
+        // 4. Return home (also releases control back to JuneCharacter)
+        yield return juneCharacter.ReturnJuneHome();
     }
 
     private Enemy[] FindClosestEnemies(Enemy fromEnemy, Enemy[] allEnemies, int count)
