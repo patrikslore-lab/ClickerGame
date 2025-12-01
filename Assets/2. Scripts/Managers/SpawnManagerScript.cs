@@ -115,15 +115,23 @@ public class SpawnManagerScript : MonoBehaviour
     {
         PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
 
-        playerConfig.wood -= 30;
+        // Check if we have enough wood before spawning
+        if (playerConfig.wood >= 30)
+        {
+            playerConfig.wood -= 30;
+            UIManager.Instance.UpdateWoodCountUI(playerConfig.wood);
 
-        UIManager.Instance.UpdateWoodCountUI(playerConfig.wood);
+            float RandomX = Random.Range(-14, 14);
+            float RandomY = Random.Range (-7, 3.5f);
+            Vector3 randomPos = new Vector3 (RandomX, RandomY);
+            Instantiate(baseDoggy, randomPos, Quaternion.identity);
 
-        float RandomX = Random.Range(-14, 14);
-        float RandomY = Random.Range (-7, 3.5f);
-        Vector3 randomPos = new Vector3 (RandomX, RandomY);
-        Instantiate(baseDoggy, randomPos, Quaternion.identity);
-
+            Debug.Log("Spawned Base Doggy for 30 wood");
+        }
+        else
+        {
+            Debug.Log("Not enough wood to spawn Base Doggy! Need 30, have " + playerConfig.wood);
+        }
     }
 }
 

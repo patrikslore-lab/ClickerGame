@@ -154,17 +154,17 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.0003986284, y: 0.10174087}
+  m_Offset: {x: 0.00088489056, y: -0.00040754676}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0}
-    oldSize: {x: 0.22, y: 0.2}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.8, y: 0.7}
     newSize: {x: 0.55, y: 0.56}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.26895773, y: 0.26151043}
+  m_Size: {x: 0.8621479, y: 0.7666109}
   m_EdgeRadius: 0
 --- !u!114 &-4403746002647101583
 MonoBehaviour:
@@ -179,6 +179,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Splittee
   enemyConfig: {fileID: 11400000, guid: a4436d025f7615e45a391f060e368db4, type: 2}
-  textBox: {fileID: 6244728492740397715, guid: 42f8e74ce3c74404a9d9052358f717e1, type: 3}
-  lifetime: 2
-  floatSpeed: 1

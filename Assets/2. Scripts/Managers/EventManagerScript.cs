@@ -35,10 +35,16 @@ public class EventManager : MonoBehaviour
     }
     
     public event Action<Enemy> OnEnemyHit;
+    public event Action ProtectorLightAddition;
 
     public void TriggerEnemyHit(Enemy enemy)
     {
         OnEnemyHit?.Invoke(enemy);
+    }
+
+    public void TriggerProtectorLightAddition()
+    {
+        ProtectorLightAddition?.Invoke();
     }
     public void TriggerCoreHit(Enemy enemy)
     {

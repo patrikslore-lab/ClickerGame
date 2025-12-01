@@ -42,6 +42,7 @@ public class LightManager : MonoBehaviour
         lightSettings = GetComponent<Light2D>();
         EventManager.Instance.LightDestruction += LightDestruction;
         EventManager.Instance.CoreHit += LightAddition;
+        EventManager.Instance.ProtectorLightAddition += LightAdditionProtector;
         lightHealthNumberMax = (lightSettings.pointLightOuterRadius + lightSettings.pointLightInnerRadius)/2;
         playerConfig = GameManager.Instance.GetPlayerConfig();
 
@@ -71,6 +72,7 @@ public class LightManager : MonoBehaviour
     {
         EventManager.Instance.LightDestruction -= LightDestruction;
         EventManager.Instance.CoreHit -= LightAddition;
+        EventManager.Instance.ProtectorLightAddition -= LightAdditionProtector;
     }
 
     private void GameOver()
@@ -160,6 +162,20 @@ public class LightManager : MonoBehaviour
             // Modify actual radius (flicker will be applied on top)
             actualOuterRadius += lightReward;
             actualInnerRadius += lightReward;
+        }
+    }
+
+    public void LightAdditionProtector()
+    {
+        // Only process light rewards during Combat mode
+        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+            return;
+
+        if (lightHealthNumber < lightHealthNumberMax)
+        {
+            // Modify actual radius (flicker will be applied on top)
+            actualOuterRadius += playerConfig.protectorLightAdditionRate * Time.deltaTime;
+            actualInnerRadius += playerConfig.protectorLightAdditionRate * Time.deltaTime;
         }
     }
 

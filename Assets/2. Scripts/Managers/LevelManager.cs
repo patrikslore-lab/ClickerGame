@@ -102,4 +102,9 @@ public class LevelManager : MonoBehaviour
         // Load the next level
         GameManager.Instance.LoadLevel(nextLevel);
     }
+
+    public RoomConfig GetCurrentRoomConfig()
+    {
+        return roomManager?.CurrentRoomConfig;
+    }
 }

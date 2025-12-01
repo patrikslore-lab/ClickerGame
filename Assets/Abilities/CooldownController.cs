@@ -54,6 +54,7 @@ public class CooldownController : MonoBehaviour
         cooldownTimer = 0f;
         UIManager.Instance.RicochetAvailable();
         UIManager.Instance.LooterAvailable();
+        UIManager.Instance.ProtectorAvailable();
         Debug.Log("Global ability cooldown complete - ALL abilities available");
     }
 }

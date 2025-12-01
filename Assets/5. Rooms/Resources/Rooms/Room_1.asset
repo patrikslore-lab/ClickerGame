@@ -15,11 +15,11 @@ MonoBehaviour:
   roomNumber: 1
   roomSprite: {fileID: 2707200778260496344, guid: 9c5bb1b92679fca4680bdd2bbdc5a1be, type: 3}
   waveSequence:
-  - waveConfig: {fileID: 11400000, guid: 8f0ae490074978b4b8215daf9f6ce9c3, type: 2}
-    timesToRepeat: 30
+  - waveConfig: {fileID: 11400000, guid: 591b9fdbad0548045bef497b7482da36, type: 2}
+    timesToRepeat: 1
   delayBetweenWaves: 5
-  minX: 14
-  maxX: -14
+  minX: -14
+  maxX: 14
   minY: -7
   maxY: 3.5
   spawnZ: -1

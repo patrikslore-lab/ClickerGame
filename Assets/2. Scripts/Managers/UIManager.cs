@@ -30,6 +30,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image LooterCooldownImage;
     [SerializeField] private Image LooterAvailableImage;
 
+    [SerializeField] private Image ProtectorOnImage;
+    [SerializeField] private Image ProtectorCooldownImage;
+    [SerializeField] private Image ProtectorAvailableImage;
+
     private PlayerConfig playerConfig;
 
     private void Awake()
@@ -232,6 +236,36 @@ public class UIManager : MonoBehaviour
             LooterOnImage.enabled = false;
             LooterCooldownImage.enabled = false;
             LooterAvailableImage.enabled = true;
+        }
+    }
+
+    public void ProtectorActivate()
+    {
+        if (ProtectorOnImage != null)
+        {
+            ProtectorOnImage.enabled = true;
+            ProtectorCooldownImage.enabled = false;
+            ProtectorAvailableImage.enabled = false;
+        }
+    }
+
+    public void ProtectorOnCooldown()
+    {
+        if (ProtectorCooldownImage != null)
+        {
+            ProtectorOnImage.enabled = false;
+            ProtectorCooldownImage.enabled = true;
+            ProtectorAvailableImage.enabled = false;
+        }
+    }
+
+    public void ProtectorAvailable()
+    {
+        if (ProtectorAvailableImage != null)
+        {
+            ProtectorOnImage.enabled = false;
+            ProtectorCooldownImage.enabled = false;
+            ProtectorAvailableImage.enabled = true;
         }
     }
 }

@@ -16,6 +16,10 @@ public class PlayerConfig : ScriptableObject
     [Header("Looter Ability")]
     public float looterMaxActiveTime = 5f;
 
+    [Header("Protector Ability")]
+    public float protectorMaxActiveTime = 6f;
+    public float protectorLightAdditionRate = 0.15f;
+
     [Header("Loot Drop Rates")]
     public int woodDropAmount = 3;
     public int corePieceAmount = 1;

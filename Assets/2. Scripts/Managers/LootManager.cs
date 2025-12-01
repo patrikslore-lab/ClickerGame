@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class LootManager : MonoBehaviour
@@ -56,6 +57,38 @@ public class LootManager : MonoBehaviour
         loot.PlayDespawnAnimation();
     }
 
+    public void Pay(Loot loot, float payAmount)
+    {
+        if (playerConfig == null)
+        {
+            Debug.LogError("LootManager: PlayerConfig not found!");
+            return;
+        }
+
+        if(loot.lootType == LootType.Wood)
+        {
+            if (playerConfig.wood - payAmount < 0)
+            {
+                Debug.Log("Not enough resource!");
+                return;
+            }
+            playerConfig.wood -= payAmount;
+            Debug.Log($"Paid {payAmount} wood");
+            UIManager.Instance.UpdateWoodCountUI(playerConfig.wood);
+        }
+
+        if(loot.lootType == LootType.Core)
+        {
+            if (playerConfig.corePieces - payAmount < 0)
+            {
+                Debug.Log("Not enough resource!");
+                return;
+            }
+            playerConfig.corePieces -= payAmount;
+            Debug.Log($"Paid {payAmount} core pieces");
+            UIManager.Instance.UpdateCoreCountUI(playerConfig.corePieces);
+        }
+    }
     private void OnDestroy()
     {
         if (EventManager.Instance != null)
