@@ -13,6 +13,8 @@ public class SpawnManagerScript : MonoBehaviour
 
     [SerializeField] private GameObject baseDoggy;
 
+    private Coroutine woodSpawnCoroutine;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -22,12 +24,6 @@ public class SpawnManagerScript : MonoBehaviour
         }
 
         Instance = this;
-    }
-
-    //Enemy spawning logic-----------------------------------------------------------
-    public void SpawnEnemy(EnemyConfig config, Vector3 position, RoomConfig roomConfig)
-    {
-        GameObject enemy = Instantiate(config.enemyPrefab, position, Quaternion.identity);
     } 
     public Vector3 CalculateSpawnPosition(RoomConfig roomConfig)
     {
@@ -45,11 +41,26 @@ public class SpawnManagerScript : MonoBehaviour
             return;
         }
 
+        if (woodSpawnCoroutine != null)
+        {
+            StopCoroutine(woodSpawnCoroutine);
+        }
+
         Vector3 randomPos = CalculateRootPosition(roomConfig);
 
         float woodLootFrequency = roomConfig.WoodSpawnFrequencySeconds;
 
-        StartCoroutine(SpawnWoodLoot(randomPos, woodLootFrequency, roomConfig));
+        woodSpawnCoroutine = StartCoroutine(SpawnWoodLoot(randomPos, woodLootFrequency, roomConfig));
+    }
+
+    public void StopWoodSpawning()
+    {
+        if (woodSpawnCoroutine != null)
+        {
+            StopCoroutine(woodSpawnCoroutine);
+            woodSpawnCoroutine = null;
+            Debug.Log("Wood spawning stopped");
+        }
     }
 
     private IEnumerator SpawnWoodLoot(Vector3 randomPos, float woodLootFrequency, RoomConfig roomConfig)
@@ -84,31 +95,6 @@ public class SpawnManagerScript : MonoBehaviour
         GameObject coreLoot = Instantiate(coreLootPrefab, enemy.transform.position, Quaternion.identity);
         CoreLootFlight flightController = coreLoot.GetComponent<CoreLootFlight>();
         flightController.FlyToUI();
-
-        //perfect textbox spawner logic
-        PerfectTextBoxSpawner(enemy.transform.position);
-    }
-
-    //accompanying PERFECT textbox
-
-    public void PerfectTextBoxSpawner(Vector3 position)
-    {
-        if (floatingTextPrefab == null)
-        {
-            Debug.LogError("SpawnManagerScript: Floating text prefab not assigned!");
-            return;
-        }
-
-        // Offset the text above the enemy
-        Vector3 textPosition = position + Vector3.up * 4f;
-        GameObject floatingText = Instantiate(floatingTextPrefab, textPosition, Quaternion.identity);
-
-        FloatingText floatingTextComponent = floatingText.GetComponent<FloatingText>();
-
-        if (floatingTextComponent != null)
-        {
-            floatingTextComponent.Initialize();
-        }
     }
 
     public void SpawnBaseDoggy()

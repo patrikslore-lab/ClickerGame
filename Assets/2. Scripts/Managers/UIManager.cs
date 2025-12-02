@@ -34,6 +34,15 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Image ProtectorCooldownImage;
     [SerializeField] private Image ProtectorAvailableImage;
 
+    [Header("Grade Popup System")]
+    [SerializeField] private bool enableGradePopups = true;
+    [SerializeField] private GameObject gradePopupPrefab;
+    [SerializeField] private Sprite sRankSprite;
+    [SerializeField] private Sprite aRankSprite;
+    [SerializeField] private Sprite bRankSprite;
+    [SerializeField] private Sprite cRankSprite;
+    [SerializeField] private Sprite dRankSprite;
+
     private PlayerConfig playerConfig;
 
     private void Awake()
@@ -195,6 +204,45 @@ public class UIManager : MonoBehaviour
     {
         if (coreCountTextBox != null)
             coreCountTextBox.text = $"{totalCores}";
+    }
+
+    public void SpawnGradePopup(ReactionGrade.Grade grade, Vector3 worldPosition)
+    {
+        if (!enableGradePopups) return;
+
+        if (gradePopupPrefab == null)
+        {
+            Debug.LogError("UIManager: gradePopupPrefab not assigned!");
+            return;
+        }
+
+        Sprite gradeSprite = grade switch
+        {
+            ReactionGrade.Grade.S => sRankSprite,
+            ReactionGrade.Grade.A => aRankSprite,
+            ReactionGrade.Grade.B => bRankSprite,
+            ReactionGrade.Grade.C => cRankSprite,
+            ReactionGrade.Grade.D => dRankSprite,
+            _ => null
+        };
+
+        if (gradeSprite == null)
+        {
+            Debug.LogWarning($"UIManager: No sprite assigned for grade {grade}");
+            return;
+        }
+
+        GameObject popup = Instantiate(gradePopupPrefab, worldPosition, Quaternion.identity);
+        GradePopup gradePopupComponent = popup.GetComponent<GradePopup>();
+        if (gradePopupComponent != null)
+        {
+            gradePopupComponent.Initialize(gradeSprite, worldPosition);
+        }
+        else
+        {
+            Debug.LogError("UIManager: gradePopupPrefab is missing GradePopup component!");
+            Destroy(popup);
+        }
     }
 
     public void RicochetActivate()

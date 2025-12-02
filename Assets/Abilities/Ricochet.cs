@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class RicochetAbility : BaseAbility
 {
@@ -88,7 +89,7 @@ public class RicochetAbility : BaseAbility
         juneCharacter.StartAbilityControl();
 
         // Find closest enemies
-        Enemy[] allEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
+        Enemy[] allEnemies = EnemyRegistry.Instance.GetAllEnemies().ToArray();
         Enemy[] closestEnemies = FindClosestEnemies(hitEnemy, allEnemies, 2);
 
         // 1. Fly to clicked enemy

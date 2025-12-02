@@ -3,13 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 
+/// <summary>
+/// Manages a single combat room session including enemy wave spawning,
+/// door break monitoring, and wave lifecycle (pause/resume/stop).
+/// </summary>
 public class RoomManager : MonoBehaviour
 {
     [SerializeField] private SpawnManagerScript spawnManager;
     private RoomConfig currentRoomConfig;
     private Coroutine waveCoroutine;
-    private bool isPaused = false;
-    private bool levelComplete = false;  
+    private bool isPaused = false;  
 
     public void Start()
     {
@@ -21,8 +24,6 @@ public class RoomManager : MonoBehaviour
 
     public void LoadRoom(int roomNumber)
     {
-        levelComplete = false;
-
         currentRoomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{roomNumber}");
 
         if (currentRoomConfig == null)
@@ -39,11 +40,6 @@ public class RoomManager : MonoBehaviour
     public void LoadDoor(GameObject door)
     {
         Instantiate(door, new Vector2 (0,8.2f) , Quaternion.identity);
-    }
-
-    public void KillDoor(GameObject door)
-    {
-        
     }
 
     private IEnumerator SpawnWaves(RoomConfig roomConfig)
@@ -102,21 +98,12 @@ public class RoomManager : MonoBehaviour
             }
         }
 
-        // Wait for all enemies to be destroyed
-        // Note: Level completion is now triggered by the door break animation event
-        // via DoorController.OnDoorBreakAnimationComplete()
-        while (!levelComplete)
+        // Wait for all enemies to be defeated
+        while (EnemyRegistry.Instance.ActiveEnemyCount > 0)
         {
-            Enemy[] remainingEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-
-            if (remainingEnemies.Length == 0)
-            {
-                levelComplete = true;
-                Debug.Log("All enemies defeated - waiting for door break animation to complete");
-                break;
-            }
             yield return new WaitForSeconds(0.05f);
         }
+        Debug.Log("All enemies defeated");
     }
 
     private IEnumerator MonitorSpawnGroupForDoorBreak(List<Enemy> enemies, RoomConfig.DoorBreakTrigger doorBreakTrigger)
@@ -196,17 +183,14 @@ public class RoomManager : MonoBehaviour
             StopCoroutine(waveCoroutine);
             waveCoroutine = null;
         }
+
+        // Stop wood loot spawning
+        spawnManager?.StopWoodSpawning();
+
         isPaused = false;
     }
 
     public bool IsPaused => isPaused;
     public RoomConfig CurrentRoomConfig => currentRoomConfig;
 
-
-    //Eventually needs to live inside game manager - but placed here for now
-    private void LevelComplete()
-    {
-        Debug.Log("Level Complete!");
-        GameManager.Instance.SetGameState(GameManager.GameState.LevelComplete);
-    }
 }

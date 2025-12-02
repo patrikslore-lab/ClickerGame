@@ -13,14 +13,14 @@ public class Enemy : MonoBehaviour
     protected bool isDead = false;
     protected virtual void Start()
     {
-        //RegisterWithManager();
         //PlaySpawnAnimation();
         spawnTime = Time.time;
+        EnemyRegistry.Instance?.RegisterEnemy(this);
     }
-    
-    protected virtual void RegisterWithManager()
-    {
 
+    private void OnDestroy()
+    {
+        EnemyRegistry.Instance?.UnregisterEnemy(this);
     }
     
     protected virtual void PlaySpawnAnimation()
@@ -33,6 +33,11 @@ public class Enemy : MonoBehaviour
     {
         if (isDead) return;
         float timeTaken = EnemyDeathTimeTaken();
+
+        // Calculate reaction grade and spawn popup
+        ReactionGrade.Grade grade = ReactionGrade.CalculateGrade(timeTaken);
+        UIManager.Instance?.SpawnGradePopup(grade, transform.position + new Vector3(1,1,0));
+
         // Notify listeners (CurrencyManager, UIManager, etc.)
         EventManager.Instance.TriggerClickTimeTaken(timeTaken);
 
@@ -52,9 +57,6 @@ public class Enemy : MonoBehaviour
         
         // Play death animation
         PlayDeathAnimation();
-        
-        // Notify EnemyManager
-        //OnDeath?.Invoke(this);
     }
 
     protected virtual void PlayDeathAnimation()

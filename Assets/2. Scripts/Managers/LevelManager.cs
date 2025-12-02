@@ -1,5 +1,10 @@
 using UnityEngine;
+using System.Linq;
 
+/// <summary>
+/// Coordinates level-to-level progression, game mode transitions (Base/Combat),
+/// and delegates room-specific logic to RoomManager.
+/// </summary>
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
@@ -56,11 +61,12 @@ public class LevelManager : MonoBehaviour
     private void DestroyAllCombatObjects()
     {
         // Destroy all enemies
-        Enemy[] enemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-        foreach (Enemy enemy in enemies)
+        int enemyCount = EnemyRegistry.Instance.ActiveEnemyCount;
+        foreach (Enemy enemy in EnemyRegistry.Instance.GetAllEnemies().ToList())
         {
             Destroy(enemy.gameObject);
         }
+        EnemyRegistry.Instance.Clear();
 
         // Destroy all loot
         Loot[] loot = FindObjectsByType<Loot>(FindObjectsSortMode.None);
@@ -69,7 +75,7 @@ public class LevelManager : MonoBehaviour
             Destroy(lootItem.gameObject);
         }
 
-        Debug.Log($"Destroyed {enemies.Length} enemies and {loot.Length} loot items");
+        Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
     }
 
     public void LoadLevel(int levelNumber)
