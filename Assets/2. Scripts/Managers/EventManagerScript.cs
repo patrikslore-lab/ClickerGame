@@ -11,6 +11,9 @@ public class EventManager : MonoBehaviour
     public event Action <Enemy> CoreHit;
     public event Action<Loot> LootClicked;
     public event Action CoreCollected;
+    public event Action doorBreak1;
+    public event Action doorBreak2;
+    public event Action doorBreak3;
     
     private void Awake()
     {
@@ -65,4 +68,17 @@ public class EventManager : MonoBehaviour
     {
         CoreCollected?.Invoke();
     }
+
+    public void DoorBreak1()
+    {
+        doorBreak1?.Invoke();
+    }   
+    public void DoorBreak2()
+    {
+        doorBreak2?.Invoke();
+    }   
+    public void DoorBreak3()
+    {
+        doorBreak3?.Invoke();
+    }   
 }

@@ -14,16 +14,89 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
   roomNumber: 1
   roomSprite: {fileID: 2707200778260496344, guid: 9c5bb1b92679fca4680bdd2bbdc5a1be, type: 3}
-  waveSequence:
-  - waveConfig: {fileID: 11400000, guid: 591b9fdbad0548045bef497b7482da36, type: 2}
-    timesToRepeat: 1
-  delayBetweenWaves: 5
+  door: {fileID: 4777360585535520036, guid: 84f08c06eabab5d4e8fb11f346359434, type: 3}
+  enemySpawns:
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 1.5
+    doorBreakOnDefeat: 1
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 2.5
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 1.5
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 2.5
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 1.5
+    doorBreakOnDefeat: 2
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 2.5
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 3
   minX: -14
   maxX: 14
   minY: -7
   maxY: 3.5
   spawnZ: -1
-  woodSpawnFrequencySeconds: 1
+  woodSpawnFrequencySeconds: 10000
   lootMinX: 14
   lootMaxX: -14
   lootMinY: -7

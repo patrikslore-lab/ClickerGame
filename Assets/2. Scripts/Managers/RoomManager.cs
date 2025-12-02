@@ -31,80 +31,144 @@ public class RoomManager : MonoBehaviour
             return;
         }
 
-        if (waveCoroutine != null)
-        {
-            StopCoroutine(waveCoroutine);
-        }
-
         isPaused = false;
         waveCoroutine = StartCoroutine(SpawnWaves(currentRoomConfig));
         spawnManager.WoodSpawningLogic(currentRoomConfig);
     }
 
+    public void LoadDoor(GameObject door)
+    {
+        Instantiate(door, new Vector2 (0,8.2f) , Quaternion.identity);
+    }
+
+    public void KillDoor(GameObject door)
+    {
+        
+    }
+
     private IEnumerator SpawnWaves(RoomConfig roomConfig)
     {
-        Debug.Log($"Starting wave sequence for Room {roomConfig.RoomNumber}. Total waves: {roomConfig.WaveSequence.Count}");
-        List<RoomConfig.WaveReference> waveSequence = roomConfig.WaveSequence;
+        Debug.Log($"Starting enemy spawns for Room {roomConfig.RoomNumber}. Total spawn entries: {roomConfig.EnemySpawns.Count}");
+        List<RoomConfig.EnemySpawn> enemySpawns = roomConfig.EnemySpawns;
 
-        for (int waveIndex = 0; waveIndex < waveSequence.Count; waveIndex++)
+        for (int spawnIndex = 0; spawnIndex < enemySpawns.Count; spawnIndex++)
         {
-            RoomConfig.WaveReference waveRef = waveSequence[waveIndex];
-            WaveConfig waveConfig = waveRef.waveConfig;
-            int timesToRepeat = waveRef.timesToRepeat;
-            
-            Debug.Log($"Wave {waveIndex}: {waveConfig.WaveName}, Repeat {timesToRepeat} times");
+            RoomConfig.EnemySpawn spawn = enemySpawns[spawnIndex];
 
-            for (int repeatIndex = 0; repeatIndex < timesToRepeat; repeatIndex++)
+            if (spawn.enemyPrefab == null)
             {
-                Debug.Log($"  Repeat {repeatIndex + 1}/{timesToRepeat}");
-                
-                // Spawn all enemy types in this wave (all at once, no delays within wave)
-                for (int i = 0; i < waveConfig.EnemiesToSpawn.Count; i++)
+                Debug.LogWarning($"Spawn entry {spawnIndex} has null enemy prefab, skipping");
+                continue;
+            }
+
+            Debug.Log($"Spawning {spawn.spawnCount}x {spawn.enemyPrefab.name}");
+
+            // Track enemies in this spawn group for door break
+            List<Enemy> spawnGroupEnemies = new List<Enemy>();
+
+            // Spawn each enemy with delay between them
+            for (int i = 0; i < spawn.spawnCount; i++)
+            {
+                Vector3 spawnPos = CalculatePosition();
+                GameObject enemyObj = Instantiate(spawn.enemyPrefab, spawnPos, Quaternion.identity);
+
+                // Track this enemy if door break is configured
+                if (spawn.doorBreakOnDefeat != RoomConfig.DoorBreakTrigger.None)
                 {
-                    WaveConfig.EnemySpawnEntry entry = waveConfig.EnemiesToSpawn[i];
-                    Debug.Log($"    Spawning {entry.spawnCount} of {entry.enemyConfig.name}");
-                    
-                    // Spawn all of this enemy type (with variation but no waiting)
-                    for (int j = 0; j < entry.spawnCount; j++)
+                    Enemy enemy = enemyObj.GetComponent<Enemy>();
+                    if (enemy != null)
                     {
-                        Vector3 spawnPos = CalculatePosition(entry.enemyConfig);
-                        spawnManager.SpawnEnemy(entry.enemyConfig, spawnPos, roomConfig);
+                        spawnGroupEnemies.Add(enemy);
                     }
                 }
 
-                // Wait before next repeat of this wave
-                if (repeatIndex < timesToRepeat - 1)
+                // Wait between individual enemies in this group
+                if (i < spawn.spawnCount - 1 && spawn.delayBetweenEnemies > 0)
                 {
-                    yield return WaitForPause(roomConfig.DelayBetweenWaves);
+                    yield return WaitForPause(spawn.delayBetweenEnemies);
                 }
             }
 
-            // Wait before next wave
-            if (waveIndex < waveSequence.Count - 1)
+            // If this spawn group has a door break trigger, start monitoring
+            if (spawn.doorBreakOnDefeat != RoomConfig.DoorBreakTrigger.None && spawnGroupEnemies.Count > 0)
             {
-                yield return WaitForPause(roomConfig.DelayBetweenWaves);
+                StartCoroutine(MonitorSpawnGroupForDoorBreak(spawnGroupEnemies, spawn.doorBreakOnDefeat));
+            }
+
+            // Wait before next spawn entry
+            if (spawnIndex < enemySpawns.Count - 1 && spawn.delayBeforeNext > 0)
+            {
+                yield return WaitForPause(spawn.delayBeforeNext);
             }
         }
 
-        // This is the final wave - now wait for all enemies to be destroyed
-        bool isFinalWave = true;
-        
-        // Poll until no enemies remain
-        while (isFinalWave && !levelComplete)
+        // Wait for all enemies to be destroyed
+        // Note: Level completion is now triggered by the door break animation event
+        // via DoorController.OnDoorBreakAnimationComplete()
+        while (!levelComplete)
         {
             Enemy[] remainingEnemies = FindObjectsByType<Enemy>(FindObjectsSortMode.None);
-            
+
             if (remainingEnemies.Length == 0)
             {
                 levelComplete = true;
-                LevelComplete();
+                Debug.Log("All enemies defeated - waiting for door break animation to complete");
                 break;
             }
-        yield return new WaitForSeconds(0.05f);
+            yield return new WaitForSeconds(0.05f);
         }
     }
 
-    private Vector3 CalculatePosition(EnemyConfig config)
+    private IEnumerator MonitorSpawnGroupForDoorBreak(List<Enemy> enemies, RoomConfig.DoorBreakTrigger doorBreakTrigger)
+    {
+        // Wait until all enemies in this spawn group are dead or destroyed
+        while (true)
+        {
+            // Remove null references (destroyed enemies)
+            enemies.RemoveAll(e => e == null);
+
+            // Check if all are dead
+            bool allDead = true;
+            foreach (Enemy enemy in enemies)
+            {
+                if (!enemy.IsDead())
+                {
+                    allDead = false;
+                    break;
+                }
+            }
+
+            if (allDead && enemies.Count == 0)
+            {
+                // All enemies defeated, trigger door break
+                TriggerDoorBreak(doorBreakTrigger);
+                yield break;
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void TriggerDoorBreak(RoomConfig.DoorBreakTrigger doorBreakTrigger)
+    {
+        switch (doorBreakTrigger)
+        {
+            case RoomConfig.DoorBreakTrigger.Break1:
+                Debug.Log("Triggering Door Break 1");
+                EventManager.Instance.DoorBreak1();
+                break;
+            case RoomConfig.DoorBreakTrigger.Break2:
+                Debug.Log("Triggering Door Break 2");
+                EventManager.Instance.DoorBreak2();
+                break;
+            case RoomConfig.DoorBreakTrigger.Break3:
+                Debug.Log("Triggering Door Break 3");
+                EventManager.Instance.DoorBreak3();
+                break;
+        }
+    }
+
+    private Vector3 CalculatePosition()
     {
         return spawnManager.CalculateSpawnPosition(currentRoomConfig);
     }

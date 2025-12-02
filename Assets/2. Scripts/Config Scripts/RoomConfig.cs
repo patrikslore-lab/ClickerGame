@@ -4,18 +4,34 @@ using System.Collections.Generic;
 [CreateAssetMenu(fileName = "Room_X", menuName = "Game/Room Config")]
 public class RoomConfig : ScriptableObject
 {
-    [System.Serializable]
-    public class WaveReference
+    public enum DoorBreakTrigger
     {
-        public WaveConfig waveConfig;
-        [Min(1)] public int timesToRepeat = 1;
+        None,
+        Break1,
+        Break2,
+        Break3
+    }
+
+    [System.Serializable]
+    public class EnemySpawn
+    {
+        public GameObject enemyPrefab;
+        [Min(1)] public int spawnCount = 1;
+        [Tooltip("Delay between each enemy in this group spawning")]
+        [Min(0)] public float delayBetweenEnemies = 0f;
+        [Tooltip("Delay before next spawn entry")]
+        [Min(0)] public float delayBeforeNext = 2f;
+        [Tooltip("Trigger door break when all enemies in this spawn group are defeated")]
+        public DoorBreakTrigger doorBreakOnDefeat = DoorBreakTrigger.None;
     }
 
     [SerializeField] private int roomNumber;
-
     [SerializeField] private Sprite roomSprite;
-    [SerializeField] private List<WaveReference> waveSequence = new List<WaveReference>();
-    [Min(0.5f)] [SerializeField] private float delayBetweenWaves = 3f;
+
+    [SerializeField] public GameObject door;
+
+    [Header("Enemy Spawns")]
+    [SerializeField] private List<EnemySpawn> enemySpawns = new List<EnemySpawn>();
 
     [Header("Spawn Bounds")]
     [SerializeField] private float minX = -8f;
@@ -41,8 +57,7 @@ public class RoomConfig : ScriptableObject
     public float LootMaxY => lootMaxY;
     public float LootSpawnZ => lootSpawnZ;
     public int RoomNumber => roomNumber;
-    public List<WaveReference> WaveSequence => waveSequence;
-    public float DelayBetweenWaves => delayBetweenWaves;
+    public List<EnemySpawn> EnemySpawns => enemySpawns;
     public float MinX => minX;
     public float MaxX => maxX;
     public float MinY => minY;

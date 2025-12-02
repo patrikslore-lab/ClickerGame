@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using System;
+using Unity.VisualScripting;
 
 public class GameManager : MonoBehaviour
 {
@@ -107,6 +108,8 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Paused:
             case GameState.LevelComplete:
+                Time.timeScale = 1f;
+                break;
             case GameState.GameOver:
                 Time.timeScale = 0f;
                 break;

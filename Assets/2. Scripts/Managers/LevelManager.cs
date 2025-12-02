@@ -6,6 +6,7 @@ public class LevelManager : MonoBehaviour
 
     [SerializeField] private SpriteRenderer levelSpriteRenderer;
     [SerializeField] private RoomManager roomManager;
+    PlayerConfig playerConfig;
 
     private void Awake()
     {
@@ -21,15 +22,18 @@ public class LevelManager : MonoBehaviour
 
     private void Start()
     {
-        // Don't auto-load level anymore - GameManager will call LoadBaseArea() or LoadLevel()
+        playerConfig = GameManager.Instance.GetPlayerConfig();
     }
 
     public void LoadBaseArea()
     {
+        
         Debug.Log("Loading Base Area");
 
         // Set game mode to Base
         GameManager.Instance.SetGameMode(GameManager.GameMode.Base);
+
+        playerConfig.lightHealthCurrent = playerConfig.lightHealthMax;
 
         // Load base room config and apply sprite
         RoomConfig baseRoomConfig = Resources.Load<RoomConfig>("Rooms/BASE");
@@ -86,6 +90,8 @@ public class LevelManager : MonoBehaviour
         {
             levelSpriteRenderer.sprite = roomConfig.RoomSprite;
         }
+
+        roomManager.LoadDoor(roomConfig.door);
 
         // Load the room (enemies, waves, etc)
         roomManager.LoadRoom(levelNumber);

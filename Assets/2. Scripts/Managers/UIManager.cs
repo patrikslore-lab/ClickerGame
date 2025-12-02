@@ -162,7 +162,8 @@ public class UIManager : MonoBehaviour
 
                 case GameManager.GameState.LevelComplete:
                     gameplayPanel?.SetActive(true); // Keep gameplay UI visible
-                    levelCompletionPanel?.SetActive(true);
+                    // Don't show levelCompletionPanel here - it's shown by LevelCompletionRoutine()
+                    // after the door animation completes
                     break;
 
                 case GameManager.GameState.GameOver:
@@ -170,6 +171,14 @@ public class UIManager : MonoBehaviour
                     break;
             }
         }
+    }
+
+    public void LevelCompletionRoutine()
+    {
+        Debug.Log("Showing level completion panel");
+        // Don't change game state - just show the panel on top of gameplay
+        levelCompletionPanel?.SetActive(true);
+        gameplayPanel?.SetActive(true); // Keep gameplay UI visible in background
     }
 
     public void Upgrading()

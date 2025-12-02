@@ -40,4 +40,15 @@ public class PlayerConfig : ScriptableObject
     public float juneIdleMovementRadius = 0.3f;
     public float juneIdleMovementSpeed = 0.5f;
     public float juneMoveSpeed = 5f;
+
+    [Header("Light Health System")]
+    public float lightHealthCurrent = 10f;      // Current light health value
+    public float lightHealthMax = 10f;          // Maximum light health value
+
+    private void OnValidate()
+    {
+        // Ensure health values stay within valid ranges
+        lightHealthCurrent = Mathf.Clamp(lightHealthCurrent, 0f, lightHealthMax);
+        lightHealthMax = Mathf.Max(0.1f, lightHealthMax); // Prevent zero/negative max
+    }
 }

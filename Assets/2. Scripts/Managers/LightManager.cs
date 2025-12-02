@@ -17,10 +17,6 @@ public class LightManager : MonoBehaviour
 
     [SerializeField] Slider LightHealth;
 
-    private float lightHealthNumberMax;
-    
-    [SerializeField] float lightHealthNumber;
-
     [Header("Light Flicker Settings")]
     [SerializeField] private float flickerFrequency = 1.0f;      // Speed of animation (how fast it changes)
     [SerializeField] private float flickerAmplitude = 0.2f;       // How much the light varies
@@ -28,27 +24,37 @@ public class LightManager : MonoBehaviour
     [SerializeField] private float noiseDetail = 1.0f;            // Detail level (1=smooth, higher=more variation)
     [SerializeField] private float noiseVariation = 0.0f;         // Different noise pattern (try 0, 50, 100, etc.)
 
-    private float actualInnerRadius;  // True radius without flicker effect
-    private float actualOuterRadius;  // True radius without flicker effect
-
     private PlayerConfig playerConfig;
 
-    private float timeTaken;
- 
     private bool isGameOver = false;
 
     void Start()
     {
         lightSettings = GetComponent<Light2D>();
+
+        // Add null check for safety
+        if (lightSettings == null)
+        {
+            Debug.LogError("LightManager requires a Light2D component!");
+            enabled = false;
+            return;
+        }
+
         EventManager.Instance.LightDestruction += LightDestruction;
         EventManager.Instance.CoreHit += LightAddition;
         EventManager.Instance.ProtectorLightAddition += LightAdditionProtector;
-        lightHealthNumberMax = (lightSettings.pointLightOuterRadius + lightSettings.pointLightInnerRadius)/2;
+
         playerConfig = GameManager.Instance.GetPlayerConfig();
 
-        // Initialize actual radius values
-        actualInnerRadius = lightSettings.pointLightInnerRadius;
-        actualOuterRadius = lightSettings.pointLightOuterRadius;
+        // Initialize from Light2D if PlayerConfig not yet set
+        if (playerConfig.lightHealthMax <= 0)
+        {
+            playerConfig.lightHealthMax = lightSettings.pointLightOuterRadius;
+        }
+        if (playerConfig.lightHealthCurrent <= 0)
+        {
+            playerConfig.lightHealthCurrent = playerConfig.lightHealthMax;
+        }
 
         StartCoroutine(LightFlicker(lightSettings));
     }
@@ -83,10 +89,11 @@ public class LightManager : MonoBehaviour
         isGameOver = false;
 
         // Set game state to GameOver (will show game over panel)
-
         GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
+
         PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
         playerConfig.currentLevel = 1;
+        playerConfig.lightHealthCurrent = playerConfig.lightHealthMax; // Reset to full health
 
         // Return to base area after a brief delay (so player can see game over screen)
         // Or you can add a "Return to Base" button on the game over panel
@@ -95,9 +102,8 @@ public class LightManager : MonoBehaviour
 
     void DisplayLightHealth()
     {
-        // Use actual radius (without flicker) for health calculation
-        lightHealthNumber = (actualOuterRadius + actualInnerRadius)/2;
-        LightHealth.value = lightHealthNumber / lightHealthNumberMax;
+        // Use actual health (without flicker) for health calculation
+        LightHealth.value = playerConfig.lightHealthCurrent / playerConfig.lightHealthMax;
     }
 
     private float GetReductionRateForEnemy(Enemy enemy)
@@ -144,9 +150,9 @@ public class LightManager : MonoBehaviour
         // Determine reduction rate based on enemy type
         float reductionRate = GetReductionRateForEnemy(enemy);
 
-        // Modify actual radius (flicker will be applied on top)
-        actualOuterRadius -= reductionRate * Time.deltaTime;
-        actualInnerRadius -= reductionRate * Time.deltaTime;
+        // Modify light health (flicker will be applied on top)
+        playerConfig.lightHealthCurrent -= reductionRate * Time.deltaTime;
+        playerConfig.lightHealthCurrent = Mathf.Max(0f, playerConfig.lightHealthCurrent);
     }
 
     void LightAddition(Enemy enemy)
@@ -157,11 +163,11 @@ public class LightManager : MonoBehaviour
 
         float lightReward = GetRewardRateForEnemy(enemy);
 
-        if (lightHealthNumber < lightHealthNumberMax)
+        if (playerConfig.lightHealthCurrent < playerConfig.lightHealthMax)
         {
-            // Modify actual radius (flicker will be applied on top)
-            actualOuterRadius += lightReward;
-            actualInnerRadius += lightReward;
+            // Modify light health (flicker will be applied on top)
+            playerConfig.lightHealthCurrent += lightReward;
+            playerConfig.lightHealthCurrent = Mathf.Min(playerConfig.lightHealthMax, playerConfig.lightHealthCurrent);
         }
     }
 
@@ -171,11 +177,11 @@ public class LightManager : MonoBehaviour
         if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
             return;
 
-        if (lightHealthNumber < lightHealthNumberMax)
+        if (playerConfig.lightHealthCurrent < playerConfig.lightHealthMax)
         {
-            // Modify actual radius (flicker will be applied on top)
-            actualOuterRadius += playerConfig.protectorLightAdditionRate * Time.deltaTime;
-            actualInnerRadius += playerConfig.protectorLightAdditionRate * Time.deltaTime;
+            // Modify light health (flicker will be applied on top)
+            playerConfig.lightHealthCurrent += playerConfig.protectorLightAdditionRate * Time.deltaTime;
+            playerConfig.lightHealthCurrent = Mathf.Min(playerConfig.lightHealthMax, playerConfig.lightHealthCurrent);
         }
     }
 
@@ -198,9 +204,8 @@ public class LightManager : MonoBehaviour
             // Apply amplitude to get final offset
             float radiusOffset = flickerAmplitude * normalizedNoise;
 
-            // Apply flicker offset to the actual radius values
-            lightSettings.pointLightInnerRadius = actualInnerRadius + radiusOffset;
-            lightSettings.pointLightOuterRadius = actualOuterRadius + radiusOffset;
+            // Apply flicker offset to the current light health
+            lightSettings.pointLightOuterRadius = playerConfig.lightHealthCurrent + radiusOffset;
 
             // Increment time
             time += Time.deltaTime;
