@@ -1,37 +1,16 @@
 using UnityEngine;
-using System.Collections;
 using System;
-using Unity.VisualScripting;
+using GameStateMachine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    // WHERE the player is (area/scene context)
-    public enum GameMode
-    {
-        MainMenu, 
-        Base,
-        Combat
-    }
-
-    // WHAT is happening (gameplay flow state)
-    public enum GameState
-    {
-        Playing,        // Normal gameplay/interaction
-        Paused,         // Game paused (ESC pressed)
-        LevelComplete,  // Level finished (Combat only)
-        GameOver        // Player defeated (Combat only)
-    }
-
     // Player Config (holds all player data)
     [SerializeField] private PlayerConfig playerConfig;
 
-    private GameMode currentGameMode = GameMode.Base; // Start with Base, will transition to MainMenu in Start()
-    private GameState currentGameState = GameState.Playing;
-
-    public GameMode CurrentGameMode => currentGameMode;
-    public GameState CurrentGameState => currentGameState;
+    // State Machine
+    public GameStateMachine.StateMachine StateMachine { get; private set; }
 
     private void Awake()
     {
@@ -43,6 +22,9 @@ public class GameManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        // Initialize the state machine
+        StateMachine = new GameStateMachine.StateMachine(this);
     }
 
     private void Start()
@@ -56,85 +38,99 @@ public class GameManager : MonoBehaviour
             Debug.LogError("UIManager.Instance is null in GameManager.Start()!");
         }
 
-        SetGameMode(GameMode.MainMenu);
+        // Initialize to MainMenu state
+        StateMachine.Initialize(StateMachine.mainMenuState);
     }
 
-    //Gamestate logic handling
-    public void SetGameMode(GameMode newMode)
+    private void Update()
     {
-        if (currentGameMode == newMode)
-            return;
-
-        currentGameMode = newMode;
-        OnGameModeChanged(newMode);
+        // Update the current state
+        StateMachine?.Update();
     }
 
-    public void SetGameState(GameState newState)
-    {
-        if (currentGameState == newState)
-            return;
-
-        currentGameState = newState;
-        OnGameStateChanged(newState);
-        Debug.Log($"GameState changed to: {newState}");
-    }
-
-    private void OnGameModeChanged(GameMode newMode)
-    {
-        // Always reset to Playing state when changing modes
-        currentGameState = GameState.Playing;
-
-        // Force UI update even if state didn't change
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.OnGameModeChanged(newMode);
-            UIManager.Instance.OnGameStateChanged(GameState.Playing, newMode);
-        }
-    }
-
-    private void OnGameStateChanged(GameState newState)
-    {
-        // Notify UI Manager
-        if (UIManager.Instance != null)
-        {
-            UIManager.Instance.OnGameStateChanged(newState, currentGameMode);
-        }
-
-        // Handle time scale based on state
-        switch (newState)
-        {
-            case GameState.Playing:
-                Time.timeScale = 1f;
-                break;
-            case GameState.Paused:
-            case GameState.LevelComplete:
-                Time.timeScale = 1f;
-                break;
-            case GameState.GameOver:
-                Time.timeScale = 0f;
-                break;
-        }
-    }
     //---------------------------------------------------
-    public void LoadLevel(int levelNumber)
-    {
-        playerConfig.currentLevel = levelNumber;
-        LevelManager.Instance.LoadLevel(levelNumber);
-    }
-
-    public void StartGame()
-    {
-        SetGameMode(GameMode.Base);
-    }
-
-    public void StartCombat()
-    {
-        SetGameMode(GameMode.Combat);
-        LevelManager.Instance.LoadLevel(1);
-    }
+    // State transition helper methods
     //---------------------------------------------------
+
+    public void TransitionToMainMenu()
+    {
+        StateMachine.TransitionTo(StateMachine.mainMenuState);
+    }
+
+    public void TransitionToBase()
+    {
+        StateMachine.TransitionTo(StateMachine.baseState);
+    }
+
+    public void TransitionToLevelGameplay()
+    {
+        StateMachine.TransitionTo(StateMachine.levelGameplayState);
+    }
+
+    public void TransitionToPaused()
+    {
+        // Store the previous state before pausing
+        StateMachine.pausedState.SetPreviousState(StateMachine.CurrentState);
+        StateMachine.TransitionTo(StateMachine.pausedState);
+    }
+
+    public void ResumeFromPause()
+    {
+        // Resume to the previous state
+        GameStateMachine.IGameState previousState = StateMachine.pausedState.GetPreviousState();
+        if (previousState != null)
+        {
+            StateMachine.TransitionTo(previousState);
+        }
+    }
+
+    public void TransitionToLevelComplete()
+    {
+        StateMachine.TransitionTo(StateMachine.levelCompleteState);
+    }
+
+    public void TransitionToGameOver()
+    {
+        StateMachine.TransitionTo(StateMachine.gameOverState);
+    }
+
+    public void TransitionToNextLevel()
+    {
+        playerConfig.currentLevel++;
+        TransitionToLevelGameplay();
+    }
+    public void TransitionToLevelInitialState()
+    {
+        StateMachine.TransitionTo(StateMachine.levelInitialState);
+    }
+
+    //---------------------------------------------------
+    // Helper properties for backward compatibility
+    //---------------------------------------------------
+
+    public bool IsInMainMenu => StateMachine?.CurrentState is GameStateMachine.MainMenuState;
+    public bool IsInBase => StateMachine?.CurrentState is GameStateMachine.BaseState;
+    public bool IsInLevelGameplay => StateMachine?.CurrentState is GameStateMachine.LevelGameplayState;
+    public bool IsInPaused => StateMachine?.CurrentState is GameStateMachine.PausedState;
+    public bool IsInLevelComplete => StateMachine?.CurrentState is GameStateMachine.LevelCompleteState;
+    public bool IsInGameOver => StateMachine?.CurrentState is GameStateMachine.GameOverState;
+    public bool IsInLevelInitialState => StateMachine?.CurrentState is GameStateMachine.LevelInitialState;
+
+    //---------------------------------------------------
+    // Data accessors
+    //---------------------------------------------------
+
     public PlayerConfig GetPlayerConfig()
     {
         return playerConfig;
+    }
+
+    //---------------------------------------------------
+    // Legacy methods (for UI buttons during migration)
+    //---------------------------------------------------
+
+    public void StartNewGame()
+    {
+        playerConfig.currentLevel = 1;
     }
 }

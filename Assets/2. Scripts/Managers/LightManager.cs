@@ -14,19 +14,47 @@ public class LightManager : MonoBehaviour
 
     private float lightRewardRate;
 
-
-    [SerializeField] Slider LightHealth;
-
-    [Header("Light Flicker Settings")]
-    [SerializeField] private float flickerFrequency = 1.0f;      // Speed of animation (how fast it changes)
-    [SerializeField] private float flickerAmplitude = 0.2f;       // How much the light varies
-    [SerializeField] private float flickerPhaseOffset = 0.0f;     // Starting position in noise field
-    [SerializeField] private float noiseDetail = 1.0f;            // Detail level (1=smooth, higher=more variation)
-    [SerializeField] private float noiseVariation = 0.0f;         // Different noise pattern (try 0, 50, 100, etc.)
+    [Header("References")]
+    [SerializeField] private FlickerController flickerController;
 
     private PlayerConfig playerConfig;
 
     private bool isGameOver = false;
+    private bool isSubscribed = false;
+
+    private void OnEnable()
+    {
+        TrySubscribe();
+    }
+
+    private void OnDisable()
+    {
+        if (EventManager.Instance != null && isSubscribed)
+        {
+            EventManager.Instance.LightDestruction -= LightDestruction;
+            EventManager.Instance.CoreHit -= LightAddition;
+            EventManager.Instance.ProtectorLightAddition -= LightAdditionProtector;
+            isSubscribed = false;
+        }
+    }
+
+    private void TrySubscribe()
+    {
+        if (isSubscribed) return;
+
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.LightDestruction += LightDestruction;
+            EventManager.Instance.CoreHit += LightAddition;
+            EventManager.Instance.ProtectorLightAddition += LightAdditionProtector;
+            isSubscribed = true;
+            Debug.Log("LightManager: Successfully subscribed to events");
+        }
+        else
+        {
+            Debug.LogWarning("LightManager: EventManager not ready yet, will retry in Start()");
+        }
+    }
 
     void Start()
     {
@@ -40,70 +68,37 @@ public class LightManager : MonoBehaviour
             return;
         }
 
-        EventManager.Instance.LightDestruction += LightDestruction;
-        EventManager.Instance.CoreHit += LightAddition;
-        EventManager.Instance.ProtectorLightAddition += LightAdditionProtector;
-
         playerConfig = GameManager.Instance.GetPlayerConfig();
 
-        // Initialize from Light2D if PlayerConfig not yet set
-        if (playerConfig.lightHealthMax <= 0)
-        {
-            playerConfig.lightHealthMax = lightSettings.pointLightOuterRadius;
-        }
-        if (playerConfig.lightHealthCurrent <= 0)
-        {
-            playerConfig.lightHealthCurrent = playerConfig.lightHealthMax;
-        }
+        // Try subscribing in Start() in case EventManager wasn't ready during OnEnable()
+        TrySubscribe();
 
-        StartCoroutine(LightFlicker(lightSettings));
+        // Get FlickerController if not assigned
+        if (flickerController == null)
+        {
+            flickerController = GetComponent<FlickerController>();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        // Only run light mechanics during Combat mode
-        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        // Only run light mechanics during LevelGameplay state
+        if (GameManager.Instance == null || !GameManager.Instance.IsInLevelGameplay)
             return;
 
-        DisplayLightHealth();
-        if (LightHealth.value <= 0 && !isGameOver)
+        if (playerConfig.lightHealthCurrent <= 0 && !isGameOver)
         {
             isGameOver = true;
             GameOver();
         }
     }
-
-    private void OnDestroy()
-    {
-        EventManager.Instance.LightDestruction -= LightDestruction;
-        EventManager.Instance.CoreHit -= LightAddition;
-        EventManager.Instance.ProtectorLightAddition -= LightAdditionProtector;
-    }
-
     private void GameOver()
     {
         Debug.Log("Player defeated - returning to base");
-
-        // Reset game over flag for next combat
         isGameOver = false;
-
-        // Set game state to GameOver (will show game over panel)
-        GameManager.Instance.SetGameState(GameManager.GameState.GameOver);
-
-        PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
-        playerConfig.currentLevel = 1;
-        playerConfig.lightHealthCurrent = playerConfig.lightHealthMax; // Reset to full health
-
-        // Return to base area after a brief delay (so player can see game over screen)
-        // Or you can add a "Return to Base" button on the game over panel
-        // For now, we'll just set the state - add button later to call LoadBaseArea()
-    }
-
-    void DisplayLightHealth()
-    {
-        // Use actual health (without flicker) for health calculation
-        LightHealth.value = playerConfig.lightHealthCurrent / playerConfig.lightHealthMax;
+        GameManager.Instance.TransitionToGameOver();
+        playerConfig.currentLevel = 0;
     }
 
     private float GetReductionRateForEnemy(Enemy enemy)
@@ -143,8 +138,8 @@ public class LightManager : MonoBehaviour
     }
     public void LightDestruction(Enemy enemy)
     {
-        // Only process light damage during Combat mode
-        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        // Only process light damage during LevelGameplay state
+        if (GameManager.Instance == null || !GameManager.Instance.IsInLevelGameplay)
             return;
 
         // Determine reduction rate based on enemy type
@@ -157,8 +152,8 @@ public class LightManager : MonoBehaviour
 
     void LightAddition(Enemy enemy)
     {
-        // Only process light rewards during Combat mode
-        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        // Only process light rewards during LevelGameplay state
+        if (GameManager.Instance == null || !GameManager.Instance.IsInLevelGameplay)
             return;
 
         float lightReward = GetRewardRateForEnemy(enemy);
@@ -173,8 +168,8 @@ public class LightManager : MonoBehaviour
 
     public void LightAdditionProtector()
     {
-        // Only process light rewards during Combat mode
-        if (GameManager.Instance == null || GameManager.Instance.CurrentGameMode != GameManager.GameMode.Combat)
+        // Only process light rewards during LevelGameplay state
+        if (GameManager.Instance == null || !GameManager.Instance.IsInLevelGameplay)
             return;
 
         if (playerConfig.lightHealthCurrent < playerConfig.lightHealthMax)
@@ -185,32 +180,4 @@ public class LightManager : MonoBehaviour
         }
     }
 
-    IEnumerator LightFlicker(Light2D lightSettings)
-    {
-        float time = flickerPhaseOffset; // Use phase offset as starting position
-
-        while(true)
-        {
-            // Sample Perlin noise with separated speed and detail
-            // X axis: time-based animation (controlled by flickerFrequency)
-            // Y axis: variation pattern (controlled by noiseVariation)
-            float noiseX = time * flickerFrequency;
-            float noiseY = noiseVariation + (time * noiseDetail);
-            float noiseValue = Mathf.PerlinNoise(noiseX, noiseY);
-
-            // Remap from [0,1] to [-1,1] for symmetric oscillation around the base radius
-            float normalizedNoise = (noiseValue - 0.5f) * 2f;
-
-            // Apply amplitude to get final offset
-            float radiusOffset = flickerAmplitude * normalizedNoise;
-
-            // Apply flicker offset to the current light health
-            lightSettings.pointLightOuterRadius = playerConfig.lightHealthCurrent + radiusOffset;
-
-            // Increment time
-            time += Time.deltaTime;
-
-            yield return null; // Wait one frame
-        }
-    }
 }

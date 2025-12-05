@@ -43,10 +43,9 @@ public class DoorController : MonoBehaviour
     public void OnDoorBreakAnimationComplete()
     {
         Debug.Log("Door break animation complete - triggering level completion");
-        // First set the game state
-        GameManager.Instance.SetGameState(GameManager.GameState.LevelComplete);
-        // Then show the panel (this needs to happen after state change)
-        UIManager.Instance.LevelCompletionRoutine();
+
+        // Transition to level complete state - state handles UI visibility
+        GameManager.Instance.TransitionToLevelComplete();
 
         doorSprite = openDoor;
     }

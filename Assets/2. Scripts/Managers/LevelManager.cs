@@ -1,16 +1,17 @@
+// LevelManager.cs
 using UnityEngine;
 using System.Linq;
 
-/// <summary>
-/// Coordinates level-to-level progression, game mode transitions (Base/Combat),
-/// and delegates room-specific logic to RoomManager.
-/// </summary>
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
 
     [SerializeField] private SpriteRenderer levelSpriteRenderer;
+    [SerializeField] private GameObject levelGameObject; // ← Add reference to level GameObject
     [SerializeField] private RoomManager roomManager;
+    
+    private LevelIntroController currentIntroController; // ← Track current intro controller
+    
     PlayerConfig playerConfig;
 
     private void Awake()
@@ -28,19 +29,20 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         playerConfig = GameManager.Instance.GetPlayerConfig();
+        
+        // Find the level GameObject if not assigned
+        if (levelGameObject == null)
+        {
+            levelGameObject = levelSpriteRenderer.gameObject;
+        }
     }
 
     public void LoadBaseArea()
     {
-        
         Debug.Log("Loading Base Area");
-
-        // Set game mode to Base
-        GameManager.Instance.SetGameMode(GameManager.GameMode.Base);
 
         playerConfig.lightHealthCurrent = playerConfig.lightHealthMax;
 
-        // Load base room config and apply sprite
         RoomConfig baseRoomConfig = Resources.Load<RoomConfig>("Rooms/BASE");
 
         if (baseRoomConfig != null && levelSpriteRenderer != null && baseRoomConfig.RoomSprite != null)
@@ -53,14 +55,12 @@ public class LevelManager : MonoBehaviour
             Debug.LogWarning("BASE.asset not found or missing sprite in Resources/Rooms/");
         }
 
-        // Stop all combat activities
         roomManager.StopWaves();
         DestroyAllCombatObjects();
     }
 
     private void DestroyAllCombatObjects()
     {
-        // Destroy all enemies
         int enemyCount = EnemyRegistry.Instance.ActiveEnemyCount;
         foreach (Enemy enemy in EnemyRegistry.Instance.GetAllEnemies().ToList())
         {
@@ -68,7 +68,6 @@ public class LevelManager : MonoBehaviour
         }
         EnemyRegistry.Instance.Clear();
 
-        // Destroy all loot
         Loot[] loot = FindObjectsByType<Loot>(FindObjectsSortMode.None);
         foreach (Loot lootItem in loot)
         {
@@ -78,41 +77,46 @@ public class LevelManager : MonoBehaviour
         Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
     }
 
-    public void LoadLevel(int levelNumber)
+    public void LoadLevel(float levelNumber)
     {
-        // Set game mode to Combat when loading a level
-        GameManager.Instance.SetGameMode(GameManager.GameMode.Combat);
-
         RoomConfig roomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{levelNumber}");
 
-        if (roomConfig == null)
-        {
-            Debug.LogError($"RoomConfig for Level {levelNumber} not found in Resources/Rooms/");
-            return;
-        }
-
-        // Update sprite
-        if (levelSpriteRenderer != null && roomConfig.RoomSprite != null)
+        // Update sprite based on RoomConfig
+        if (roomConfig != null && levelSpriteRenderer != null && roomConfig.RoomSprite != null)
         {
             levelSpriteRenderer.sprite = roomConfig.RoomSprite;
+            Debug.Log($"Level {levelNumber} background sprite loaded");
+        }
+        else
+        {
+            Debug.LogWarning($"Could not load sprite for Level {levelNumber}");
         }
 
-        roomManager.LoadDoor(roomConfig.door);
+        // Load door if configured
+        if (roomConfig.door != null)
+        {
+            Instantiate(roomConfig.door, new Vector2(0, 8.2f), Quaternion.identity);
+            Debug.Log($"Level {levelNumber} door spawned");
+        }
 
-        // Load the room (enemies, waves, etc)
-        roomManager.LoadRoom(levelNumber);
+        // Get the intro controller from the level GameObject
+        currentIntroController = levelGameObject.GetComponent<LevelIntroController>();
+        
+        if (currentIntroController == null)
+        {
+            Debug.LogWarning("No LevelIntroController found on level GameObject!");
+        }
     }
 
-    public void LoadNextLevel()
+    public void startCombatSession()
     {
-        PlayerConfig playerConfig = GameManager.Instance.GetPlayerConfig();
-        int nextLevel = playerConfig.currentLevel + 1;
+        roomManager.StartCombatSession(playerConfig);
+    }
 
-        // Reset game state to Playing
-        GameManager.Instance.SetGameState(GameManager.GameState.Playing);
-
-        // Load the next level
-        GameManager.Instance.LoadLevel(nextLevel);
+    // ← NEW: Get the intro controller for the current level
+    public LevelIntroController GetIntroController()
+    {
+        return currentIntroController;
     }
 
     public RoomConfig GetCurrentRoomConfig()

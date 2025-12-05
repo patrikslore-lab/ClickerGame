@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1543e922d30dcf7409908a19e34d328b, type: 3}
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
-  corePieces: 55
+  corePieces: 56
   wood: 0
   currentLevel: 1
   ricochetMaxActiveTime: 100
@@ -32,5 +32,5 @@ MonoBehaviour:
   juneIdleMovementRadius: 0.5
   juneIdleMovementSpeed: 1
   juneMoveSpeed: 40
-  lightHealthCurrent: 51.516106
+  lightHealthCurrent: 60
   lightHealthMax: 60

@@ -294,7 +294,10 @@ PlayerSettings:
   androidSymbolsSizeThreshold: 800
   m_BuildTargetIcons: []
   m_BuildTargetPlatformIcons: []
-  m_BuildTargetBatching: []
+  m_BuildTargetBatching:
+  - m_BuildTarget: Standalone
+    m_StaticBatching: 1
+    m_DynamicBatching: 0
   m_BuildTargetShaderSettings: []
   m_BuildTargetGraphicsJobs: []
   m_BuildTargetGraphicsJobMode: []
@@ -680,10 +683,10 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: ff8cbfb4-0314-473d-847c-35b2730b3dcd
+  cloudProjectId: 071b3aa3-c18a-49e9-a11c-f44d214080b3
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
-  projectName: Clicker Game Prototype
+  projectName: ClickerGame
   organizationId: unity_d99a35fd70b594ec3336
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0

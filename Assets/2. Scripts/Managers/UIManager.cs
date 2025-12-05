@@ -2,19 +2,20 @@ using UnityEngine;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
-    [SerializeField] private GameObject gameplayPanel;
-    [SerializeField] private GameObject levelCompletionPanel;
-    [SerializeField] private GameObject pauseMenuPanel;
-    [SerializeField] private GameObject gameOverPanel;
-    [SerializeField] private GameObject basePanel;
-    [SerializeField] private GameObject mainMenuPanel;
-    [SerializeField] private GameObject startGamePanel;
-    [SerializeField] private GameObject upgradePanel;
+    public GameObject gameplayPanel;
+    public GameObject levelCompletionPanel;
+    public GameObject pauseMenuPanel;
+    public GameObject gameOverPanel;
+    public GameObject basePanel;
+    public GameObject mainMenuPanel;
+    public GameObject startGamePanel;
+    public GameObject upgradePanel;
 
     [SerializeField] private TextMeshProUGUI woodCountTextBox;
 
@@ -95,7 +96,7 @@ public class UIManager : MonoBehaviour
         HideAllPanels();
     }
 
-    private void HideAllPanels()
+    public void HideAllPanels()
     {
         gameplayPanel?.SetActive(false);
         levelCompletionPanel?.SetActive(false);
@@ -105,94 +106,6 @@ public class UIManager : MonoBehaviour
         mainMenuPanel?.SetActive(false);
         upgradePanel?.SetActive(false);
         startGamePanel?.SetActive(false);
-    }
-
-    // Called when GameMode changes (MainMenu, Base, Combat)
-    public void OnGameModeChanged(GameManager.GameMode newMode)
-    {
-        // Mode changes are handled by OnGameStateChanged with the mode parameter
-    }
-
-    // Called when GameState changes (Playing, Paused, LevelComplete, GameOver)
-    public void OnGameStateChanged(GameManager.GameState newState, GameManager.GameMode currentMode)
-    {
-        // Hide all panels first
-        HideAllPanels();
-
-        // Show appropriate panels based on BOTH mode and state
-        if (currentMode == GameManager.GameMode.MainMenu)
-        {
-            if (mainMenuPanel == null)
-            {
-                Debug.LogError("mainMenuPanel is NULL! Assign it in UIManager Inspector.");
-                return;
-            }
-
-            mainMenuPanel.SetActive(true);
-            return;
-        }
-
-        if (currentMode == GameManager.GameMode.Base)
-        {
-            switch (newState)
-            {
-                case GameManager.GameState.Playing:
-                    if (basePanel != null)
-                    {
-                        basePanel.SetActive(true);
-                        gameplayPanel?.SetActive(true);
-                    }
-                    else
-                    {
-                        Debug.LogError("basePanel is NULL! Assign it in UIManager Inspector.");
-                    }
-                    break;
-                case GameManager.GameState.Paused:
-                    basePanel?.SetActive(true);
-                    pauseMenuPanel?.SetActive(true);
-                    Debug.Log("Showing basePanel + pauseMenuPanel");
-                    break;
-            }
-            return;
-        }
-
-        if (currentMode == GameManager.GameMode.Combat)
-        {
-            switch (newState)
-            {
-                case GameManager.GameState.Playing:
-                    gameplayPanel?.SetActive(true);
-                    break;
-
-                case GameManager.GameState.Paused:
-                    gameplayPanel?.SetActive(true); // Keep gameplay UI visible
-                    pauseMenuPanel?.SetActive(true);
-                    break;
-
-                case GameManager.GameState.LevelComplete:
-                    gameplayPanel?.SetActive(true); // Keep gameplay UI visible
-                    // Don't show levelCompletionPanel here - it's shown by LevelCompletionRoutine()
-                    // after the door animation completes
-                    break;
-
-                case GameManager.GameState.GameOver:
-                    gameOverPanel?.SetActive(true);
-                    break;
-            }
-        }
-    }
-
-    public void LevelCompletionRoutine()
-    {
-        Debug.Log("Showing level completion panel");
-        // Don't change game state - just show the panel on top of gameplay
-        levelCompletionPanel?.SetActive(true);
-        gameplayPanel?.SetActive(true); // Keep gameplay UI visible in background
-    }
-
-    public void Upgrading()
-    {
-        upgradePanel.SetActive(true);
     }
 
     public void UpdateWoodCountUI(float totalWood)
@@ -323,6 +236,53 @@ public class UIManager : MonoBehaviour
             ProtectorOnImage.enabled = false;
             ProtectorCooldownImage.enabled = false;
             ProtectorAvailableImage.enabled = true;
+        }
+    }
+
+    private void OnEnable()
+    {
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnIntroPhase2_LightActivate += HandleIntroPhase2;
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (EventManager.Instance != null)
+        {
+            EventManager.Instance.OnIntroPhase2_LightActivate -= HandleIntroPhase2;
+        }
+    }
+    private void HandleIntroPhase2()
+    {
+        StartCoroutine(RevealUISequence());
+    }
+
+    // NEW: Add this method
+    private IEnumerator RevealUISequence()
+    {
+        // If you have a CanvasGroup on gameplay panel, fade it in
+        CanvasGroup canvasGroup = gameplayPanel?.GetComponent<CanvasGroup>();
+        
+        if (canvasGroup != null)
+        {
+            float elapsed = 0f;
+            float duration = 1f;
+            
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                canvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / duration);
+                yield return null;
+            }
+            
+            canvasGroup.alpha = 1f;
+        }
+        else
+        {
+            // No fade, just show the panel immediately
+            gameplayPanel?.SetActive(true);
         }
     }
 }

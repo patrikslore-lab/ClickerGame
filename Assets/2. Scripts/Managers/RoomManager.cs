@@ -22,24 +22,12 @@ public class RoomManager : MonoBehaviour
         }
     }
 
-    public void LoadRoom(int roomNumber)
+    public void StartCombatSession(PlayerConfig playerConfig)
     {
-        currentRoomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{roomNumber}");
-
-        if (currentRoomConfig == null)
-        {
-            Debug.LogError($"RoomConfig for Room {roomNumber} not found in Resources/Rooms/");
-            return;
-        }
-
+        currentRoomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{playerConfig.currentLevel}");
         isPaused = false;
         waveCoroutine = StartCoroutine(SpawnWaves(currentRoomConfig));
         spawnManager.WoodSpawningLogic(currentRoomConfig);
-    }
-
-    public void LoadDoor(GameObject door)
-    {
-        Instantiate(door, new Vector2 (0,8.2f) , Quaternion.identity);
     }
 
     private IEnumerator SpawnWaves(RoomConfig roomConfig)

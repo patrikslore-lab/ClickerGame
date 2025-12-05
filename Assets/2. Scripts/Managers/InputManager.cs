@@ -55,8 +55,8 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        // Manage cursor and crosshair visibility based on game mode
-        bool isMainMenu = GameManager.Instance != null && GameManager.Instance.CurrentGameMode == GameManager.GameMode.MainMenu;
+        // Manage cursor and crosshair visibility based on game state
+        bool isMainMenu = GameManager.Instance != null && GameManager.Instance.IsInMainMenu;
 
         if (isMainMenu)
         {
@@ -168,33 +168,19 @@ public class InputManager : MonoBehaviour
     }
     private void TogglePause()
     {
-        GameManager.GameState currentState = GameManager.Instance.CurrentGameState;
-        GameManager.GameMode currentMode = GameManager.Instance.CurrentGameMode;
-
-        // Don't allow pausing in MainMenu
-        if (currentMode == GameManager.GameMode.MainMenu)
+        // Don't allow pausing in MainMenu, LevelComplete, or GameOver states
+        if (GameManager.Instance.IsInMainMenu ||
+            GameManager.Instance.IsInLevelComplete ||
+            GameManager.Instance.IsInGameOver)
             return;
 
-        if (currentState == GameManager.GameState.Playing)
+        if (GameManager.Instance.IsInPaused)
         {
-            GameManager.Instance.SetGameState(GameManager.GameState.Paused);
+            // Resume from pause - GameManager will restore previous state
+            GameManager.Instance.ResumeFromPause();
 
-            // Only pause waves if we're in Combat mode
-            if (currentMode == GameManager.GameMode.Combat)
-            {
-                RoomManager roomManager = FindAnyObjectByType<RoomManager>();
-                if (roomManager != null)
-                {
-                    roomManager.PauseWaves();
-                }
-            }
-        }
-        else if (currentState == GameManager.GameState.Paused)
-        {
-            GameManager.Instance.SetGameState(GameManager.GameState.Playing);
-
-            // Only resume waves if we're in Combat mode
-            if (currentMode == GameManager.GameMode.Combat)
+            // Only resume waves if we're returning to LevelGameplay
+            if (GameManager.Instance.IsInLevelGameplay)
             {
                 RoomManager roomManager = FindAnyObjectByType<RoomManager>();
                 if (roomManager != null)
@@ -202,6 +188,20 @@ public class InputManager : MonoBehaviour
                     roomManager.ResumeWaves();
                 }
             }
+        }
+        else if (GameManager.Instance.IsInBase || GameManager.Instance.IsInLevelGameplay)
+        {
+            // Pause waves if we're currently in LevelGameplay
+            if (GameManager.Instance.IsInLevelGameplay)
+            {
+                RoomManager roomManager = FindAnyObjectByType<RoomManager>();
+                if (roomManager != null)
+                {
+                    roomManager.PauseWaves();
+                }
+            }
+
+            GameManager.Instance.TransitionToPaused();
         }
     }
 }
