@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
-
         // Initialize the state machine
         StateMachine = new GameStateMachine.StateMachine(this);
     }

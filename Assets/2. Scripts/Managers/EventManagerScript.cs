@@ -13,7 +13,6 @@ public class EventManager : MonoBehaviour
         }
         
         Instance = this;
-        DontDestroyOnLoad(gameObject); // Persist across scenes (optional)
     }
     public event Action<float> OnTargetClicked;
     public void TriggerClickTimeTaken(float timeTaken) => OnTargetClicked?.Invoke(timeTaken);

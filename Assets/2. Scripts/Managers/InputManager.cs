@@ -32,7 +32,6 @@ public class InputManager : MonoBehaviour
         }
 
         _instance = this;
-        DontDestroyOnLoad(gameObject);
 
         // InputManager setup
         mainCamera = Camera.main;

@@ -22,39 +22,6 @@ public class LightManager : MonoBehaviour
     private bool isGameOver = false;
     private bool isSubscribed = false;
 
-    private void OnEnable()
-    {
-        TrySubscribe();
-    }
-
-    private void OnDisable()
-    {
-        if (EventManager.Instance != null && isSubscribed)
-        {
-            EventManager.Instance.LightDestruction -= LightDestruction;
-            EventManager.Instance.CoreHit -= LightAddition;
-            EventManager.Instance.ProtectorLightAddition -= LightAdditionProtector;
-            isSubscribed = false;
-        }
-    }
-
-    private void TrySubscribe()
-    {
-        if (isSubscribed) return;
-
-        if (EventManager.Instance != null)
-        {
-            EventManager.Instance.LightDestruction += LightDestruction;
-            EventManager.Instance.CoreHit += LightAddition;
-            EventManager.Instance.ProtectorLightAddition += LightAdditionProtector;
-            isSubscribed = true;
-            Debug.Log("LightManager: Successfully subscribed to events");
-        }
-        else
-        {
-            Debug.LogWarning("LightManager: EventManager not ready yet, will retry in Start()");
-        }
-    }
 
     void Start()
     {
@@ -70,8 +37,9 @@ public class LightManager : MonoBehaviour
 
         playerConfig = GameManager.Instance.GetPlayerConfig();
 
-        // Try subscribing in Start() in case EventManager wasn't ready during OnEnable()
-        TrySubscribe();
+        EventManager.Instance.LightDestruction += LightDestruction;
+        EventManager.Instance.CoreHit += LightAddition;
+        EventManager.Instance.ProtectorLightAddition += LightAdditionProtector;
 
         // Get FlickerController if not assigned
         if (flickerController == null)
@@ -168,6 +136,17 @@ public class LightManager : MonoBehaviour
             // Modify light health (flicker will be applied on top)
             playerConfig.lightHealthCurrent += playerConfig.protectorLightAdditionRate * Time.deltaTime;
             playerConfig.lightHealthCurrent = Mathf.Min(playerConfig.lightHealthMax, playerConfig.lightHealthCurrent);
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (EventManager.Instance != null && isSubscribed)
+        {
+            EventManager.Instance.LightDestruction -= LightDestruction;
+            EventManager.Instance.CoreHit -= LightAddition;
+            EventManager.Instance.ProtectorLightAddition -= LightAdditionProtector;
+            isSubscribed = false;
         }
     }
 

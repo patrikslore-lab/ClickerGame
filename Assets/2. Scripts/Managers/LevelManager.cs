@@ -33,7 +33,6 @@ public class LevelManager : MonoBehaviour
         }
 
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -149,4 +148,6 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
     }
+
+    public RoomConfig GetCurrentRoomConfig() => currentRoomConfig;
 }

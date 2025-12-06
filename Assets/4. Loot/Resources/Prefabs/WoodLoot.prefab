@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6660675041356308585}
   - component: {fileID: -5368803161089698009}
   m_Layer: 0
-  m_Name: LootWood
+  m_Name: WoodLoot
   m_TagString: Loot
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

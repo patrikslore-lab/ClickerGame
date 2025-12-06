@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Splitter : Enemy
 {
-    private Animator splitterAnimator; //calls animator component directly
+    private Animator splitterAnimator;
     [SerializeField] private GameObject splitteeOne;
     [SerializeField] private GameObject splitteeTwo;
     [SerializeField] private GameObject splitteeThree;
@@ -29,7 +29,7 @@ public class Splitter : Enemy
         }
 
         splitteeSpawnRadius = enemyConfig.radius;
-        config = LevelManager.Instance.GetCurrentRoomConfig();   
+        config = LevelManager.Instance?.CurrentRoomConfig;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Start jumping after spawn
@@ -72,15 +72,15 @@ public class Splitter : Enemy
         Instantiate(splitteeThree, SpawnCalc(i+2), Quaternion.identity);
     }
 
-    
     public Vector2 SpawnCalc(int i)
     {
-        Vector2 center = new Vector2 (transform.position.x, transform.position.y);
+        Vector2 center = new Vector2(transform.position.x, transform.position.y);
         Vector2[] circlePositions = GetCirclePositions(center, splitteeSpawnRadius);
         Vector2 spawnPos = circlePositions[i];
         return spawnPos;
     }
-        public Vector2[] GetCirclePositions(Vector2 center, float radius, int count = 3)
+
+    public Vector2[] GetCirclePositions(Vector2 center, float radius, int count = 3)
     {
         Vector2[] positions = new Vector2[count];
 
@@ -113,8 +113,6 @@ public class Splitter : Enemy
 
     private Vector3 CalculateNextJumpPosition()
     {
-        
-
         if (config == null)
         {
             Debug.LogWarning("Splitter: No RoomConfig found! Using current position.");
@@ -130,16 +128,10 @@ public class Splitter : Enemy
         Vector3 offset = (Vector3)randomDirection * jumpDistance;
         Vector3 targetPos = currentPos + offset;
 
-        // Log before clamping
-        Debug.Log($"Splitter Jump: Current={currentPos}, Direction={randomDirection}, Offset={offset}, Target(unclamped)={targetPos}");
-
         // Clamp to room bounds
         targetPos.x = Mathf.Clamp(targetPos.x, config.MinX, config.MaxX);
         targetPos.y = Mathf.Clamp(targetPos.y, config.MinY, config.MaxY);
         targetPos.z = currentPos.z;
-
-        // Log after clamping
-        Debug.Log($"Splitter Jump: Target(clamped)={targetPos}, Bounds=[{config.MinX},{config.MaxX}] x [{config.MinY},{config.MaxY}], Distance={Vector3.Distance(currentPos, targetPos):F2}");
 
         return targetPos;
     }
@@ -177,6 +169,7 @@ public class Splitter : Enemy
         // Ensure final position is exact
         transform.position = targetPosition;
     }
+
     private void OnDestroy()
     {
         // Stop jumping coroutine when destroyed

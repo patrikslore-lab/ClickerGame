@@ -8,24 +8,28 @@ public class Splittee : Enemy
     [SerializeField] private float jumpHeight = 2f;
     [SerializeField] private float pauseBetweenJumps = 0.2f;
     [SerializeField] private float jumpDistance = 2f;
+    
     private SpriteRenderer spriteRenderer;
     private RoomConfig config;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     protected override void Start()
     {
-        config = LevelManager.Instance.GetCurrentRoomConfig();   
+        config = LevelManager.Instance?.CurrentRoomConfig;
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         // Start jumping after spawn
         StartCoroutine(JumpingRoutine());
+        
+        base.Start();
     }
-    //override below to not include any delay after dying = can remove later 
-    // (if we're having 1s death anims as standard)
+
+    // Override to not include any delay after dying
     protected override void PlayDeathAnimation()
     {
         Destroy(gameObject);
     }
-   private IEnumerator JumpingRoutine()
+
+    private IEnumerator JumpingRoutine()
     {
         while (!isDead)
         {
@@ -42,11 +46,9 @@ public class Splittee : Enemy
 
     private Vector3 CalculateNextJumpPosition()
     {
-        RoomConfig config = LevelManager.Instance.GetCurrentRoomConfig();
-
         if (config == null)
         {
-            Debug.LogWarning("Splitter: No RoomConfig found! Using current position.");
+            Debug.LogWarning("Splittee: No RoomConfig found! Using current position.");
             return transform.position;
         }
 
@@ -59,16 +61,10 @@ public class Splittee : Enemy
         Vector3 offset = (Vector3)randomDirection * jumpDistance;
         Vector3 targetPos = currentPos + offset;
 
-        // Log before clamping
-        Debug.Log($"Splitter Jump: Current={currentPos}, Direction={randomDirection}, Offset={offset}, Target(unclamped)={targetPos}");
-
         // Clamp to room bounds
         targetPos.x = Mathf.Clamp(targetPos.x, config.MinX, config.MaxX);
         targetPos.y = Mathf.Clamp(targetPos.y, config.MinY, config.MaxY);
         targetPos.z = currentPos.z;
-
-        // Log after clamping
-        Debug.Log($"Splitter Jump: Target(clamped)={targetPos}, Bounds=[{config.MinX},{config.MaxX}] x [{config.MinY},{config.MaxY}], Distance={Vector3.Distance(currentPos, targetPos):F2}");
 
         return targetPos;
     }
@@ -107,5 +103,3 @@ public class Splittee : Enemy
         transform.position = targetPosition;
     }
 }
-
-

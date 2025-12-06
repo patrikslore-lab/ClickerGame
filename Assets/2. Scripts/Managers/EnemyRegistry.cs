@@ -20,7 +20,6 @@ public class EnemyRegistry : MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
     }
 
     public void RegisterEnemy(Enemy enemy)

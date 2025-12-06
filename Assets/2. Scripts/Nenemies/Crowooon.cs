@@ -2,10 +2,8 @@ using UnityEngine;
 
 public class Crowooon : Enemy
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    private Animator crowooonAnim; //calls animator component directly
-
-    bool isCasting = false;
+    private Animator crowooonAnim;
+    private bool isCasting = false;
     
     protected override void Start()
     {
@@ -13,7 +11,7 @@ public class Crowooon : Enemy
         
         if (crowooonAnim == null)
         {
-            Debug.LogWarning("BringerOfDeathAnimator not found!");
+            Debug.LogWarning("Crowooon: Animator not found!");
         }
         
         base.Start();
@@ -35,11 +33,9 @@ public class Crowooon : Enemy
         }
     }
 
-    // Example: Add boss-specific behavior
     public void TriggerSpecialAttack()
     {
-        Debug.Log("BringerOfDeath special attack!");
-        // Custom boss logic here
+        Debug.Log("Crowooon special attack!");
     }
 
     void Update()
@@ -51,7 +47,7 @@ public class Crowooon : Enemy
             if (stateInfo.IsName("CastLoop"))
             {
                 isCasting = true;
-                Debug.Log("CastPrep animation detected - starting light reduction");
+                Debug.Log("CastLoop animation detected - starting light reduction");
             }
         }
 
@@ -66,5 +62,4 @@ public class Crowooon : Enemy
     {
         Destroy(gameObject);
     }
-
 }

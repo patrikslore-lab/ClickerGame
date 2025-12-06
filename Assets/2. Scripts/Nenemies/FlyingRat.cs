@@ -14,20 +14,13 @@ public class FlyingRat : Enemy
     [SerializeField] private float pauseDuration = 0.5f;
     [SerializeField] private float arcHeight = 0.3f;
 
-    private RoomManager roomManager;
     private Coroutine movementCoroutine;
     private SpriteRenderer spriteRenderer;
 
     protected override void Start()
     {
         fRatAnimator = GetComponent<Animator>();
-        roomManager = FindAnyObjectByType<RoomManager>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        if (roomManager == null)
-        {
-            Debug.LogError("FlyingRat: RoomManager not found!");
-        }
 
         base.Start();
     }
@@ -187,7 +180,6 @@ public class FlyingRat : Enemy
 
     private RoomConfig GetRoomConfig()
     {
-        return roomManager?.CurrentRoomConfig;
+        return LevelManager.Instance?.CurrentRoomConfig;
     }
-
 }

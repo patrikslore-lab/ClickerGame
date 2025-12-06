@@ -115,7 +115,6 @@ public class JuneCharacter : MonoBehaviour
         }
 
         juneInstance = Instantiate(junePrefab, homePosition, Quaternion.identity);
-        DontDestroyOnLoad(juneInstance);
         juneSpriteRenderer = juneInstance.GetComponent<SpriteRenderer>();
 
         if (juneSpriteRenderer == null)
