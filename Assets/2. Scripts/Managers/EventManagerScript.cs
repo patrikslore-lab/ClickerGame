@@ -48,33 +48,13 @@ public class EventManager : MonoBehaviour
     public void DoorBreak3() => doorBreak3?.Invoke();
 
     //Level Intro GameState Events======================================
-    // Phase trigger events
-    public event Action OnIntroPhase1_LanternEnter;
-    public event Action OnIntroPhase2_LightActivate;
-    public event Action OnIntroPhase3_UIReveal;
-    public event Action OnIntroPhase4_DoorAnimation;
-    
-    // Phase completion events
-    public event Action OnIntroPhase1Complete;
-    public event Action OnIntroPhase2Complete;
-    public event Action OnIntroPhase3Complete;
-    public event Action OnIntroPhase4Complete;
-    
-    // Overall intro completion
+    public event Action OnAllEnemiesDefeated;
+    public event Action OnLightDepleted;
+
+    public void TriggerAllEnemiesDefeated() => OnAllEnemiesDefeated?.Invoke();
+    public void TriggerLightDepleted() => OnLightDepleted?.Invoke();
+
     public event Action OnLevelIntroComplete;
-    
-    // Trigger methods for phases
-    public void TriggerIntroPhase1() => OnIntroPhase1_LanternEnter?.Invoke();
-    public void TriggerIntroPhase2() => OnIntroPhase2_LightActivate?.Invoke();
-    public void TriggerIntroPhase3() => OnIntroPhase3_UIReveal?.Invoke();
-    public void TriggerIntroPhase4() => OnIntroPhase4_DoorAnimation?.Invoke();
-    
-    // Trigger methods for completions
-    public void TriggerIntroPhase1Complete() => OnIntroPhase1Complete?.Invoke();
-    public void TriggerIntroPhase2Complete() => OnIntroPhase2Complete?.Invoke();
-    public void TriggerIntroPhase3Complete() => OnIntroPhase3Complete?.Invoke();
-    public void TriggerIntroPhase4Complete() => OnIntroPhase4Complete?.Invoke();
-    
     public void TriggerLevelIntroComplete() => OnLevelIntroComplete?.Invoke();
 
     //Level Intro GameState Events End ======================================

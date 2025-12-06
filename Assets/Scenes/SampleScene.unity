@@ -245,6 +245,23 @@ MonoBehaviour:
   flickerPhaseOffset: 0
   noiseDetail: 1
   noiseVariation: 0
+--- !u!320 &15578550
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15578539}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: c8fad97b2f95e4e4fb3c7878ab1ff2e1, type: 2}
+  m_InitialState: 1
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings: []
+  m_ExposedReferences:
+    m_References: []
 --- !u!1 &25170385
 GameObject:
   m_ObjectHideFlags: 0
@@ -2004,6 +2021,18 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6864492682032215961, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
   m_PrefabInstance: {fileID: 2134303854}
   m_PrefabAsset: {fileID: 0}
+--- !u!225 &821572770
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821572764}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &838128111
 GameObject:
   m_ObjectHideFlags: 0
@@ -2579,7 +2608,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   levelSpriteRenderer: {fileID: 458476375}
-  levelGameObject: {fileID: 0}
+  levelGameObject: {fileID: 458476374}
   roomManager: {fileID: 603624415}
 --- !u!1 &1026661733
 GameObject:
@@ -4587,6 +4616,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1759513642}
     m_Modifications:
+    - target: {fileID: 675310560267465069, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 675310560267465069, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
+      propertyPath: m_UseSpriteMesh
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 675310560267465069, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
+      propertyPath: m_PreserveAspect
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1144489570222646218, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
+      propertyPath: m_CullTransparentMesh
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2130807481805767753, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
       propertyPath: m_Name
       value: Gameplay Panel (UI GrayBox)
@@ -4717,15 +4762,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6864492682032215961, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6864492682032215961, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6864492682032215961, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6864492682032215961, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -4769,7 +4814,10 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6864492682032215961, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1094687081}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2130807481805767753, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 821572770}
   m_SourcePrefab: {fileID: 100100000, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
 --- !u!1001 &5284081842367344328
 PrefabInstance:
@@ -4839,6 +4887,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
       insertIndex: -1
       addedObject: {fileID: 15578546}
+    - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 15578550}
   m_SourcePrefab: {fileID: 100100000, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
 --- !u!1001 &6822729243927234597
 PrefabInstance:

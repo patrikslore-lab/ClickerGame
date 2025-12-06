@@ -6,6 +6,7 @@ namespace GameStateMachine
     public class LevelInitialState : IGameState
     {
         private GameManager gameManager;
+        private bool isSubscribed = false;
 
         public LevelInitialState(GameManager gameManager)
         {
@@ -15,63 +16,72 @@ namespace GameStateMachine
         public void Enter()
         {
             Debug.Log("Entering LevelInitial State");
-
-            int currentLevel = gameManager.GetPlayerConfig().currentLevel;
-
-            LevelManager.Instance.LoadLevel(currentLevel);
-
-            // Hide panels as gameplay panel alpha lerp by levelintrocontroller
-            if (UIManager.Instance != null)
-            {
-                UIManager.Instance.HideAllPanels();
-                UIManager.Instance.gameplayPanel?.SetActive(true);
-                UIManager.Instance.gameplayPanel.GetComponent<CanvasGroup>().alpha = 0;  //hiding the panel initially with 0 alpha for it to be revealed by levelintrocontroller
-            }
-
+            
             Time.timeScale = 1f;
+            
+            // 1. Load the level
+            int currentLevel = gameManager.GetPlayerConfig().currentLevel;
+            LevelManager.Instance.LoadLevel(currentLevel);
+            
+            // 2. Prepare UI (UIManager owns the details)
+            UIManager.Instance?.PrepareForLevelIntro();
+            
+            // 3. Subscribe and start intro
+            SubscribeToIntroComplete();
+            StartIntroOrSkip();
+        }
 
-            // Subscribe to intro completion
-            if (EventManager.Instance != null)
+        private void SubscribeToIntroComplete()
+        {
+            if (EventManager.Instance != null && !isSubscribed)
             {
                 EventManager.Instance.OnLevelIntroComplete += HandleIntroComplete;
+                isSubscribed = true;
             }
+        }
 
-            // Get and start the intro controller
-            Debug.Log("LevelInitialState: Attempting to get intro controller...");
+        private void UnsubscribeFromIntroComplete()
+        {
+            if (EventManager.Instance != null && isSubscribed)
+            {
+                EventManager.Instance.OnLevelIntroComplete -= HandleIntroComplete;
+                isSubscribed = false;
+            }
+        }
+
+        private void StartIntroOrSkip()
+        {
             LevelIntroController introController = LevelManager.Instance?.GetIntroController();
 
             if (introController != null)
             {
-                Debug.Log("LevelInitialState: Intro controller found, calling PlayIntro()");
+                Debug.Log("Starting level intro sequence");
                 introController.PlayIntro();
             }
-
             else
             {
-                Debug.LogWarning("LevelInitialState: No intro controller found, skipping to gameplay");
-                gameManager.TransitionToLevelGameplay();
+                Debug.LogWarning("No intro controller - skipping to gameplay");
+                TransitionToGameplay();
             }
-        }
-
-        public void Update()
-        {
-            // Nothing needed here - intro controller handles its own updates
         }
 
         private void HandleIntroComplete()
         {
-            Debug.Log("Intro complete, transitioning to gameplay");
+            Debug.Log("Intro complete - transitioning to gameplay");
+            TransitionToGameplay();
+        }
+
+        private void TransitionToGameplay()
+        {
             gameManager.TransitionToLevelGameplay();
         }
+
+        public void Update() { }
 
         public void Exit()
         {
             Debug.Log("Exiting LevelInitial State");
-
-            if (EventManager.Instance != null)
-            {
-                EventManager.Instance.OnLevelIntroComplete -= HandleIntroComplete;
-            }
+            UnsubscribeFromIntroComplete();
         }
     }
 }

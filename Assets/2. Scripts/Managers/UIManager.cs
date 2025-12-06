@@ -239,50 +239,55 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    /// Prepares UI for level intro sequence (panel visible but transparent)
+    public void PrepareForLevelIntro()
     {
-        if (EventManager.Instance != null)
-        {
-            EventManager.Instance.OnIntroPhase2_LightActivate += HandleIntroPhase2;
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (EventManager.Instance != null)
-        {
-            EventManager.Instance.OnIntroPhase2_LightActivate -= HandleIntroPhase2;
-        }
-    }
-    private void HandleIntroPhase2()
-    {
-        StartCoroutine(RevealUISequence());
-    }
-
-    // NEW: Add this method
-    private IEnumerator RevealUISequence()
-    {
-        // If you have a CanvasGroup on gameplay panel, fade it in
-        CanvasGroup canvasGroup = gameplayPanel?.GetComponent<CanvasGroup>();
+        HideAllPanels();
         
-        if (canvasGroup != null)
+        if (gameplayPanel != null)
         {
-            float elapsed = 0f;
-            float duration = 1f;
+            gameplayPanel.SetActive(true);
             
-            while (elapsed < duration)
+            var canvasGroup = gameplayPanel.GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
             {
-                elapsed += Time.deltaTime;
-                canvasGroup.alpha = Mathf.Lerp(0f, 1f, elapsed / duration);
-                yield return null;
+                canvasGroup.alpha = 0f;
             }
-            
-            canvasGroup.alpha = 1f;
         }
-        else
+    }
+    public void ShowGameplayUI()
+    {
+        HideAllPanels();
+        
+        if (gameplayPanel != null)
         {
-            // No fade, just show the panel immediately
-            gameplayPanel?.SetActive(true);
+            gameplayPanel.SetActive(true);
+            
+            var canvasGroup = gameplayPanel.GetComponent<CanvasGroup>();
+            if (canvasGroup != null)
+            {
+                canvasGroup.alpha = 1f;
+            }
         }
+    }
+    /// Coroutine to fade in gameplay UI (for intro sequence)
+    public IEnumerator RevealGameplayUI(float duration = 1f)
+    {
+        if (gameplayPanel == null) yield break;
+        
+        var canvasGroup = gameplayPanel.GetComponent<CanvasGroup>();
+        if (canvasGroup == null) yield break;
+        
+        float elapsed = 0f;
+        float startAlpha = canvasGroup.alpha;
+        
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            canvasGroup.alpha = Mathf.Lerp(startAlpha, 1f, elapsed / duration);
+            yield return null;
+        }
+
+        canvasGroup.alpha = 1f;
     }
 }

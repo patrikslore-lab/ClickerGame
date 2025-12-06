@@ -1,4 +1,4 @@
-using Mono.Cecil;
+// LevelGameplayState.cs
 using UnityEngine;
 
 namespace GameStateMachine
@@ -6,6 +6,7 @@ namespace GameStateMachine
     public class LevelGameplayState : IGameState
     {
         private GameManager gameManager;
+        private bool isSubscribed = false;
 
         public LevelGameplayState(GameManager gameManager)
         {
@@ -14,37 +15,62 @@ namespace GameStateMachine
 
         public void Enter()
         {
-            Debug.Log("entered levelgameplaystate");
-            LevelManager.Instance.startCombatSession();
+            Debug.Log("Entering LevelGameplay State");
+            
+            // Ensure UI is fully visible (UIManager owns the details)
+            UIManager.Instance?.ShowGameplayUI();
+            
+            // Subscribe to gameplay events
+            SubscribeToEvents();
+            
+            // Start combat
+            if (LevelManager.Instance != null)
+            {
+                LevelManager.Instance.startCombatSession();
+            }
+            else
+            {
+                Debug.LogError("LevelGameplayState: LevelManager.Instance is null!");
+            }
+        }
+
+        private void SubscribeToEvents()
+        {
+            if (EventManager.Instance == null || isSubscribed) return;
+            
+            EventManager.Instance.OnLightDepleted += HandleGameOver;
+            // Note: Level completion handled by DoorController.OnDoorBreakAnimationComplete()
+            isSubscribed = true;
+        }
+
+        private void UnsubscribeFromEvents()
+        {
+            if (EventManager.Instance == null || !isSubscribed) return;
+            
+            EventManager.Instance.OnLightDepleted -= HandleGameOver;
+            isSubscribed = false;
+        }
+
+        private void HandleGameOver()
+        {
+            Debug.Log("Light depleted - game over");
+            gameManager.TransitionToGameOver();
         }
 
         public void Update()
         {
-            // ========================================
-            // ACTIVE SYSTEMS (running during this state)
-            // ========================================
-            // - LightManager: Updates light health, checks for game over (light <= 0)
-            // - RoomManager: Wave spawning via coroutines (passive but active in this state)
-            // ========================================
-            // PASSIVE SYSTEMS (independent Update loops)
-            // ========================================
-            // - InputManager: Mouse clicks (enemy targeting), ESC for pause
-            //   → Checks IsInLevelGameplay to enable crosshair, handle clicks
-            // - UIManager: Cooldown text updates (juneCooldownTextBox)
-            // - Enemy scripts: Each enemy runs its own Update() for animations, attacks
-            // ========================================
-            // EVENT-DRIVEN SYSTEMS
-            // ========================================
-            // - Enemy attacks → EventManager.LightDestruction → LightManager.LightDestruction()
-            // - Enemy core clicked → EventManager.CoreHit → LightManager.LightAddition()
-            // - Enemy killed → EventManager.EnemyHit → [Various systems]
-            // - Protector active → EventManager.ProtectorLightAddition → LightManager.LightAdditionProtector()
-            // - Wave complete → RoomManager.MonitorSpawnGroupForDoorBreak → EventManager.DoorBreak3 → DoorController
+            // Combat systems run independently:
+            // - RoomManager: wave spawning via coroutines
+            // - Enemy scripts: behavior and attacks  
+            // - LightManager: health tracking (event-driven)
+            // - InputManager: clicks and pause
+            // - DoorController: triggers level complete on final break
         }
 
         public void Exit()
         {
             Debug.Log("Exiting LevelGameplay State");
+            UnsubscribeFromEvents();
         }
     }
 }

@@ -91,7 +91,10 @@ public class RoomManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.05f);
         }
+
         Debug.Log("All enemies defeated");
+
+        EventManager.Instance?.TriggerAllEnemiesDefeated();     
     }
 
     private IEnumerator MonitorSpawnGroupForDoorBreak(List<Enemy> enemies, RoomConfig.DoorBreakTrigger doorBreakTrigger)

@@ -86,19 +86,6 @@ public class LightManager : MonoBehaviour
         // Only run light mechanics during LevelGameplay state
         if (GameManager.Instance == null || !GameManager.Instance.IsInLevelGameplay)
             return;
-
-        if (playerConfig.lightHealthCurrent <= 0 && !isGameOver)
-        {
-            isGameOver = true;
-            GameOver();
-        }
-    }
-    private void GameOver()
-    {
-        Debug.Log("Player defeated - returning to base");
-        isGameOver = false;
-        GameManager.Instance.TransitionToGameOver();
-        playerConfig.currentLevel = 0;
     }
 
     private float GetReductionRateForEnemy(Enemy enemy)
@@ -138,16 +125,20 @@ public class LightManager : MonoBehaviour
     }
     public void LightDestruction(Enemy enemy)
     {
-        // Only process light damage during LevelGameplay state
         if (GameManager.Instance == null || !GameManager.Instance.IsInLevelGameplay)
             return;
 
-        // Determine reduction rate based on enemy type
         float reductionRate = GetReductionRateForEnemy(enemy);
-
-        // Modify light health (flicker will be applied on top)
+        
         playerConfig.lightHealthCurrent -= reductionRate * Time.deltaTime;
         playerConfig.lightHealthCurrent = Mathf.Max(0f, playerConfig.lightHealthCurrent);
+        
+        // Check for game over when health actually changes (not every frame)
+        if (playerConfig.lightHealthCurrent <= 0f && !isGameOver)
+        {
+            isGameOver = true;
+            EventManager.Instance?.TriggerLightDepleted();
+        }
     }
 
     void LightAddition(Enemy enemy)
