@@ -2,17 +2,27 @@
 using UnityEngine;
 using System.Linq;
 
+/// <summary>
+/// Singleton manager for level lifecycle.
+/// Orchestrates controllers for intro, enemies, and loot.
+/// </summary>
 public class LevelManager : MonoBehaviour
 {
     public static LevelManager Instance { get; private set; }
 
+    [Header("Level Display")]
     [SerializeField] private SpriteRenderer levelSpriteRenderer;
-    [SerializeField] private GameObject levelGameObject; // ← Add reference to level GameObject
-    [SerializeField] private RoomManager roomManager;
-    
-    private LevelIntroController currentIntroController; // ← Track current intro controller
-    
-    PlayerConfig playerConfig;
+    [SerializeField] private GameObject levelGameObject;
+
+    [Header("Controllers")]
+    [SerializeField] private LevelIntroController introController;
+    [SerializeField] private EnemySpawnController enemySpawnController;
+    [SerializeField] private LootSpawnController lootSpawnController;
+
+    private RoomConfig currentRoomConfig;
+    private PlayerConfig playerConfig;
+
+    public RoomConfig CurrentRoomConfig => currentRoomConfig;
 
     private void Awake()
     {
@@ -29,12 +39,33 @@ public class LevelManager : MonoBehaviour
     private void Start()
     {
         playerConfig = GameManager.Instance.GetPlayerConfig();
-        
-        // Find the level GameObject if not assigned
-        if (levelGameObject == null)
+    }
+
+    //===========================================
+    // PUBLIC API
+    //===========================================
+
+    public void LoadLevel(int levelNumber)
+    {
+        currentRoomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{levelNumber}");
+
+        if (currentRoomConfig == null)
         {
-            levelGameObject = levelSpriteRenderer.gameObject;
+            Debug.LogError($"Could not load RoomConfig for level {levelNumber}");
+            return;
         }
+
+        if (levelSpriteRenderer != null && currentRoomConfig.RoomSprite != null)
+        {
+            levelSpriteRenderer.sprite = currentRoomConfig.RoomSprite;
+        }
+
+        if (currentRoomConfig.door != null)
+        {
+            Instantiate(currentRoomConfig.door, new Vector2(0, 8.2f), Quaternion.identity);
+        }
+
+        Debug.Log($"Level {levelNumber} loaded");
     }
 
     public void LoadBaseArea()
@@ -43,25 +74,67 @@ public class LevelManager : MonoBehaviour
 
         playerConfig.lightHealthCurrent = playerConfig.lightHealthMax;
 
-        RoomConfig baseRoomConfig = Resources.Load<RoomConfig>("Rooms/BASE");
+        RoomConfig baseConfig = Resources.Load<RoomConfig>("Rooms/BASE");
 
-        if (baseRoomConfig != null && levelSpriteRenderer != null && baseRoomConfig.RoomSprite != null)
+        if (baseConfig != null && levelSpriteRenderer != null && baseConfig.RoomSprite != null)
         {
-            levelSpriteRenderer.sprite = baseRoomConfig.RoomSprite;
-            Debug.Log("Base background sprite loaded");
-        }
-        else
-        {
-            Debug.LogWarning("BASE.asset not found or missing sprite in Resources/Rooms/");
+            levelSpriteRenderer.sprite = baseConfig.RoomSprite;
         }
 
-        roomManager.StopWaves();
+        StopCombatSession();
         DestroyAllCombatObjects();
     }
+
+    public void StartCombatSession()
+    {
+        if (currentRoomConfig == null)
+        {
+            Debug.LogError("No RoomConfig loaded - call LoadLevel first");
+            return;
+        }
+
+        enemySpawnController?.StartWaves(currentRoomConfig);
+        lootSpawnController?.StartLootSpawning(currentRoomConfig);
+
+        Debug.Log("Combat session started");
+    }
+
+    public void StopCombatSession()
+    {
+        enemySpawnController?.StopWaves();
+        lootSpawnController?.StopLootSpawning();
+
+        Debug.Log("Combat session stopped");
+    }
+
+    public void PauseCombat()
+    {
+        enemySpawnController?.Pause();
+    }
+
+    public void ResumeCombat()
+    {
+        enemySpawnController?.Resume();
+    }
+
+    public void SpawnCoreLoot(Vector3 position)
+    {
+        lootSpawnController?.SpawnCoreLoot(position);
+    }
+
+    public LevelIntroController GetIntroController()
+    {
+        return introController;
+    }
+
+    //===========================================
+    // CLEANUP
+    //===========================================
 
     private void DestroyAllCombatObjects()
     {
         int enemyCount = EnemyRegistry.Instance.ActiveEnemyCount;
+
         foreach (Enemy enemy in EnemyRegistry.Instance.GetAllEnemies().ToList())
         {
             Destroy(enemy.gameObject);
@@ -75,52 +148,5 @@ public class LevelManager : MonoBehaviour
         }
 
         Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
-    }
-
-    public void LoadLevel(float levelNumber)
-    {
-        RoomConfig roomConfig = Resources.Load<RoomConfig>($"Rooms/Room_{levelNumber}");
-
-        // Update sprite based on RoomConfig
-        if (roomConfig != null && levelSpriteRenderer != null && roomConfig.RoomSprite != null)
-        {
-            levelSpriteRenderer.sprite = roomConfig.RoomSprite;
-            Debug.Log($"Level {levelNumber} background sprite loaded");
-        }
-        else
-        {
-            Debug.LogWarning($"Could not load sprite for Level {levelNumber}");
-        }
-
-        // Load door if configured
-        if (roomConfig.door != null)
-        {
-            Instantiate(roomConfig.door, new Vector2(0, 8.2f), Quaternion.identity);
-            Debug.Log($"Level {levelNumber} door spawned");
-        }
-
-        // Get the intro controller from the level GameObject
-        currentIntroController = levelGameObject.GetComponent<LevelIntroController>();
-        
-        if (currentIntroController == null)
-        {
-            Debug.LogWarning("No LevelIntroController found on level GameObject!");
-        }
-    }
-
-    public void startCombatSession()
-    {
-        roomManager.StartCombatSession(playerConfig);
-    }
-
-    // ← NEW: Get the intro controller for the current level
-    public LevelIntroController GetIntroController()
-    {
-        return currentIntroController;
-    }
-
-    public RoomConfig GetCurrentRoomConfig()
-    {
-        return roomManager?.CurrentRoomConfig;
     }
 }

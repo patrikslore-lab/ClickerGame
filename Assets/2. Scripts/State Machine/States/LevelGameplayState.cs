@@ -16,21 +16,17 @@ namespace GameStateMachine
         public void Enter()
         {
             Debug.Log("Entering LevelGameplay State");
-            
+
             // Ensure UI is fully visible (UIManager owns the details)
             UIManager.Instance?.ShowGameplayUI();
-            
+
             // Subscribe to gameplay events
             SubscribeToEvents();
-            
-            // Start combat
+
+            // Start combat via LevelManager
             if (LevelManager.Instance != null)
             {
-                LevelManager.Instance.startCombatSession();
-            }
-            else
-            {
-                Debug.LogError("LevelGameplayState: LevelManager.Instance is null!");
+                LevelManager.Instance.StartCombatSession();
             }
         }
 
@@ -60,8 +56,9 @@ namespace GameStateMachine
         public void Update()
         {
             // Combat systems run independently:
-            // - RoomManager: wave spawning via coroutines
-            // - Enemy scripts: behavior and attacks  
+            // - EnemySpawnController: wave spawning via coroutines
+            // - LootSpawnController: wood and core loot spawning
+            // - Enemy scripts: behavior and attacks
             // - LightManager: health tracking (event-driven)
             // - InputManager: clicks and pause
             // - DoorController: triggers level complete on final break

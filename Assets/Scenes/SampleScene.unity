@@ -119,49 +119,55 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &15578539 stripped
+--- !u!1 &7640156
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
-  m_PrefabInstance: {fileID: 5284081842367344328}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &15578543
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7640157}
+  - component: {fileID: 7640158}
+  m_Layer: 0
+  m_Name: LootSpawnController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7640157
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7640156}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 411847933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7640158
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 15578539}
+  m_GameObject: {fileID: 7640156}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c83d699b2ae64974bbe07ae3586542c3, type: 3}
+  m_Script: {fileID: 11500000, guid: 89fa66c204ba3534b90638b1e9ddad22, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LanternController
-  targetPosition: {x: 0, y: 0, z: 0}
-  moveDuration: 1.5
-  movementCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
+  m_EditorClassIdentifier: Assembly-CSharp::LootSpawnController
+--- !u!1 &15578539 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
+  m_PrefabInstance: {fileID: 5284081842367344328}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &15578544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +268,77 @@ PlayableDirector:
   m_SceneBindings: []
   m_ExposedReferences:
     m_References: []
+--- !u!114 &15578554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 15578539}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c83d699b2ae64974bbe07ae3586542c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LanternController
+  targetPosition: {x: 0, y: 0, z: 0}
+  moveDuration: 1.5
+  movementCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  lightFadeDuration: 1
+--- !u!1 &19644982
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 19644983}
+  m_Layer: 0
+  m_Name: ---------------------------------------------------------------------------------
+    (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &19644983
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19644982}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &25170385
 GameObject:
   m_ObjectHideFlags: 0
@@ -417,6 +494,50 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2943633736000438796, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
   m_PrefabInstance: {fileID: 324107055}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &232844913
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 232844914}
+  - component: {fileID: 232844915}
+  m_Layer: 0
+  m_Name: EnemySpawnController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &232844914
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 232844913}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 411847933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &232844915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 232844913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4d32fd7a1a7f5478250d16bc895d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnController
 --- !u!1 &239562607 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2943633736000438796, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
@@ -1221,7 +1342,7 @@ GameObject:
   m_Component:
   - component: {fileID: 411847933}
   m_Layer: 0
-  m_Name: ---------------------------------------------------------------------------------
+  m_Name: CONTROLLERS=================
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1239,7 +1360,11 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 232844914}
+  - {fileID: 1650999678}
+  - {fileID: 7640157}
+  - {fileID: 1919103410}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &458476374
@@ -1252,9 +1377,8 @@ GameObject:
   m_Component:
   - component: {fileID: 458476376}
   - component: {fileID: 458476375}
-  - component: {fileID: 458476377}
   m_Layer: 0
-  m_Name: LevelBackground
+  m_Name: LevelGameObject
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1333,20 +1457,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &458476377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 458476374}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2d377597d3576f340bf604f9fb628d87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LevelIntroController
-  allowSkip: 1
-  skipKey: 32
 --- !u!114 &461819936 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4189962569406091680, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
@@ -1911,7 +2021,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1c009f86ae7dff4e9c2ee4c36233aab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RoomManager
-  spawnManager: {fileID: 1919103409}
+  spawnManager: {fileID: 0}
+  currentRoomConfig: {fileID: 0}
+  isPaused: 0
 --- !u!4 &603624416
 Transform:
   m_ObjectHideFlags: 0
@@ -2609,7 +2721,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelManager
   levelSpriteRenderer: {fileID: 458476375}
   levelGameObject: {fileID: 458476374}
-  roomManager: {fileID: 603624415}
+  introController: {fileID: 0}
+  enemySpawnController: {fileID: 232844915}
+  lootSpawnController: {fileID: 7640158}
 --- !u!1 &1026661733
 GameObject:
   m_ObjectHideFlags: 0
@@ -2998,7 +3112,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1919103409}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SpawnManagerScript, Assembly-CSharp
         m_MethodName: SpawnBaseDoggy
         m_Mode: 1
@@ -3910,6 +4024,66 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1604676679}
   m_CullTransparentMesh: 1
+--- !u!1 &1650999677
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1650999678}
+  - component: {fileID: 1650999680}
+  - component: {fileID: 1650999679}
+  m_Layer: 0
+  m_Name: LevelIntroController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1650999678
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650999677}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 411847933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1650999679
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650999677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d377597d3576f340bf604f9fb628d87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LevelIntroController
+  allowSkip: 1
+  skipKey: 32
+  lanternController: {fileID: 15578554}
+--- !u!114 &1650999680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650999677}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a4d32fd7a1a7f5478250d16bc895d12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemySpawnController
 --- !u!1 &1709836702 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2943633736000438796, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
@@ -4481,30 +4655,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1919103410}
-  - component: {fileID: 1919103409}
+  - component: {fileID: 1919103411}
   m_Layer: 0
-  m_Name: SpawnManager
+  m_Name: DoggySpawnController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1919103409
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1919103408}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 425d22f9f1a3ec843a750eec92d95de2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::SpawnManagerScript
-  woodLootPrefab: {fileID: 3893650012518876967, guid: a0da38b8ccccf6245b52bda2d3fbaf12, type: 3}
-  coreLootPrefab: {fileID: 560144690407654776, guid: 92d298734e9771d4badb6e28e7589498, type: 3}
-  floatingTextPrefab: {fileID: 6263699664368207948, guid: c8c6be4d1979bab489171ffd705cba43, type: 3}
-  baseDoggy: {fileID: 4438818973461134206, guid: cd5ce77a9f0960e4a80826880c8228d9, type: 3}
 --- !u!4 &1919103410
 Transform:
   m_ObjectHideFlags: 0
@@ -4513,13 +4671,26 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1919103408}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 411847933}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1919103411
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919103408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d20ebc27f81bf974385b6b065d9e8961, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoggySpawnController
+  baseDoggy: {fileID: 4438818973461134206, guid: cd5ce77a9f0960e4a80826880c8228d9, type: 3}
 --- !u!1 &1934655529
 GameObject:
   m_ObjectHideFlags: 0
@@ -4877,9 +5048,6 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 15578543}
-    - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 15578545}
     - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
       insertIndex: -1
@@ -4890,6 +5058,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
       insertIndex: -1
       addedObject: {fileID: 15578550}
+    - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 15578554}
   m_SourcePrefab: {fileID: 100100000, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
 --- !u!1001 &6822729243927234597
 PrefabInstance:
@@ -5037,6 +5208,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1554191334}
   - {fileID: 411847933}
+  - {fileID: 19644983}
   - {fileID: 519420032}
   - {fileID: 1918164509}
   - {fileID: 619394802}
@@ -5045,7 +5217,6 @@ SceneRoots:
   - {fileID: 1347662210}
   - {fileID: 603624416}
   - {fileID: 458476376}
-  - {fileID: 1919103410}
   - {fileID: 1595499878}
   - {fileID: 957731382}
   - {fileID: 1799334607}

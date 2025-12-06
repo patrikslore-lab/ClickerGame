@@ -149,7 +149,10 @@ public class InputManager : MonoBehaviour
 
                 if (enemy.EnemyDeathTimeTaken() <= 2000) // Max click time on core to award core loot
                 {
-                    SpawnManagerScript.Instance.SpawnCoreLoot(enemy);
+                    if (LevelManager.Instance != null)
+                    {
+                        LevelManager.Instance.SpawnCoreLoot(enemy.transform.position);
+                    }
                 }
                 // TODO: Add conditional core loot logic here if needed
                 // Example: if (someCondition) { EventManager.Instance.TriggerLootHit(coreLoot); }
@@ -179,25 +182,23 @@ public class InputManager : MonoBehaviour
             // Resume from pause - GameManager will restore previous state
             GameManager.Instance.ResumeFromPause();
 
-            // Only resume waves if we're returning to LevelGameplay
+            // Only resume combat if we're returning to LevelGameplay
             if (GameManager.Instance.IsInLevelGameplay)
             {
-                RoomManager roomManager = FindAnyObjectByType<RoomManager>();
-                if (roomManager != null)
+                if (LevelManager.Instance != null)
                 {
-                    roomManager.ResumeWaves();
+                    LevelManager.Instance.ResumeCombat();
                 }
             }
         }
         else if (GameManager.Instance.IsInBase || GameManager.Instance.IsInLevelGameplay)
         {
-            // Pause waves if we're currently in LevelGameplay
+            // Pause combat if we're currently in LevelGameplay
             if (GameManager.Instance.IsInLevelGameplay)
             {
-                RoomManager roomManager = FindAnyObjectByType<RoomManager>();
-                if (roomManager != null)
+                if (LevelManager.Instance != null)
                 {
-                    roomManager.PauseWaves();
+                    LevelManager.Instance.PauseCombat();
                 }
             }
 

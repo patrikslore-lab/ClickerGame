@@ -12,7 +12,6 @@ public class LanternController : MonoBehaviour
     
     [Header("Light Settings")]
     [SerializeField] private float lightFadeDuration = 1f;
-
     private Light2D lightSettings;
     private FlickerController flickerController;
     private PlayerConfig playerConfig;
