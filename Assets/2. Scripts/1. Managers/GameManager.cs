@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using GameStateMachine;
+using UnityEngine.TestTools;
 
 public class GameManager : MonoBehaviour
 {
@@ -95,11 +96,30 @@ public class GameManager : MonoBehaviour
     public void TransitionToNextLevel()
     {
         playerConfig.currentLevel++;
-        TransitionToLevelGameplay();
+        TransitionToLevelInitialState();
     }
     public void TransitionToLevelInitialState()
     {
         StateMachine.TransitionTo(StateMachine.levelInitialState);
+    }
+
+    //---------------------------------------------------
+    // Base button caller to start new game session
+    //---------------------------------------------------
+
+    public void StartNewGame() //currently set up to enter level 1, later gonna store progress (maybe)
+    {
+        playerConfig.currentLevel = 1;
+        StateMachine.TransitionTo(StateMachine.levelInitialState);
+    }
+
+    //---------------------------------------------------
+    // ExitGame Caller
+    //---------------------------------------------------
+    public void ExitGame()
+    {
+        UnityEditor.EditorApplication.isPlaying = false;
+        Application.Quit();
     }
 
     //---------------------------------------------------
@@ -126,9 +146,4 @@ public class GameManager : MonoBehaviour
     //---------------------------------------------------
     // Legacy methods (for UI buttons during migration)
     //---------------------------------------------------
-
-    public void StartNewGame()
-    {
-        playerConfig.currentLevel = 1;
-    }
 }

@@ -31,66 +31,6 @@ MonoBehaviour:
     delayBetweenEnemies: 0
     delayBeforeNext: 3
     doorBreakOnDefeat: 3
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 3
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 1.5
-    doorBreakOnDefeat: 1
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 2.5
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 1.5
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 2.5
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 1.5
-    doorBreakOnDefeat: 2
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 1
-    delayBetweenEnemies: 0
-    delayBeforeNext: 2.5
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 2
-    delayBetweenEnemies: 0.1
-    delayBeforeNext: 3
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 2
-    delayBetweenEnemies: 0.1
-    delayBeforeNext: 3
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 2
-    delayBetweenEnemies: 0.1
-    delayBeforeNext: 3
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 2
-    delayBetweenEnemies: 0.1
-    delayBeforeNext: 3
-    doorBreakOnDefeat: 0
-  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
-    spawnCount: 2
-    delayBetweenEnemies: 0.1
-    delayBeforeNext: 3
-    doorBreakOnDefeat: 3
   minX: -14
   maxX: 14
   minY: -7

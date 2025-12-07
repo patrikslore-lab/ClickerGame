@@ -91,7 +91,14 @@ public class UIManager : MonoBehaviour
 
     public void ShowUpgradePanel()
     {
-        upgradePanel.SetActive(true);
+        if (upgradePanel.activeSelf)
+        {
+            upgradePanel.SetActive(false);
+        }
+        else
+        {
+            upgradePanel.SetActive(true);
+        }
     }
 
     public void HideUpgradePanel()

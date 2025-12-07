@@ -75,6 +75,8 @@ public class LevelManager : MonoBehaviour
 
         RoomConfig baseConfig = Resources.Load<RoomConfig>("Rooms/BASE");
 
+        playerConfig.currentLevel = 0;
+
         if (baseConfig != null && levelSpriteRenderer != null && baseConfig.RoomSprite != null)
         {
             levelSpriteRenderer.sprite = baseConfig.RoomSprite;
