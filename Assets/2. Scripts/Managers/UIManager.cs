@@ -89,6 +89,16 @@ public class UIManager : MonoBehaviour
         }   
     }
 
+    public void ShowUpgradePanel()
+    {
+        upgradePanel.SetActive(true);
+    }
+
+    public void HideUpgradePanel()
+    {
+        upgradePanel.SetActive(false);
+    }
+
     public void InitializePanels()
     {
         // Hide all panels initially - GameManager will set the correct mode/state

@@ -2,29 +2,17 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour
 {
-    // References to the Sprite Renderer for crosshair
     private SpriteRenderer crosshairRenderer;
     private Transform crosshairTransform;
     private static InputManager _instance;
-    
-    public static InputManager Instance
-    {
-        get
-        {
-            if (_instance == null)
-            {
-                
-            }
-            return _instance;
-        }
-    }
-    
+
+    public static InputManager Instance => _instance;
+
     [SerializeField] private LayerMask enemyLayer;
     private Camera mainCamera;
 
     private void Awake()
     {
-        // Singleton setup
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
@@ -32,14 +20,11 @@ public class InputManager : MonoBehaviour
         }
 
         _instance = this;
-
-        // InputManager setup
         mainCamera = Camera.main;
     }
-    
+
     private void Start()
     {
-        //Crosshair Logic
         GameObject crosshairObj = GameObject.Find("Crosshair");
         if (crosshairObj != null)
         {
@@ -54,9 +39,9 @@ public class InputManager : MonoBehaviour
 
     private void Update()
     {
-        // Manage cursor and crosshair visibility based on game state
         bool isMainMenu = GameManager.Instance != null && GameManager.Instance.IsInMainMenu;
 
+        // Cursor visibility
         if (isMainMenu)
         {
             Cursor.visible = true;
@@ -70,29 +55,28 @@ public class InputManager : MonoBehaviour
                 crosshairRenderer.enabled = true;
         }
 
-        if (Input.GetMouseButtonDown(0))
+        // Click handling
+        if (Input.GetMouseButtonDown(0) && !isMainMenu)
         {
-            if (!isMainMenu)
-            {
-                HandleClick();
-            }
+            HandleClick();
         }
 
         UpdateCrosshairPosition();
 
+        // Pause toggle
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             TogglePause();
         }
     }
 
-    void UpdateCrosshairPosition()
+    private void UpdateCrosshairPosition()
     {
         if (crosshairTransform != null)
         {
             Vector3 mousePos = Input.mousePosition;
             Vector3 worldPos = mainCamera.ScreenToWorldPoint(mousePos);
-            worldPos.z = 0; // Keep at z=0 for 2D rendering
+            worldPos.z = 0;
             crosshairTransform.position = worldPos;
         }
     }
@@ -106,7 +90,7 @@ public class InputManager : MonoBehaviour
         RaycastHit2D coreHit = default;
         RaycastHit2D enemyHit = default;
 
-        // Categorize hits by component type (priority: Loot > Core > Enemy)
+        // Categorize hits by priority: Loot > Core > Enemy
         foreach (RaycastHit2D hit in hits)
         {
             Loot loot = hit.collider.GetComponent<Loot>();
@@ -128,49 +112,59 @@ public class InputManager : MonoBehaviour
         // Handle in priority order: Loot > Core > Enemy
         if (lootHit.collider != null)
         {
-            Loot loot = lootHit.collider.GetComponent<Loot>();
-            if (loot != null)
-            {
-                Debug.Log("LOOT");
-                EventManager.Instance.TriggerLootHit(loot);
-            }
+            HandleLootClick(lootHit);
         }
         else if (coreHit.collider != null)
         {
-            Enemy enemy = coreHit.collider.GetComponentInParent<Enemy>();
-
-            if (enemy != null && !enemy.IsDead())
-            {
-                Debug.Log("COREHIT");
-                EventManager.Instance.TriggerCoreHit(enemy);
-                enemy.OnEnemyClicked();
-                EventManager.Instance.TriggerEnemyHit(enemy);
-
-                if (enemy.EnemyDeathTimeTaken() <= 2000) // Max click time on core to award core loot
-                {
-                    if (LevelManager.Instance != null)
-                    {
-                        LevelManager.Instance.SpawnCoreLoot(enemy.transform.position);
-                    }
-                }
-                // TODO: Add conditional core loot logic here if needed
-                // Example: if (someCondition) { EventManager.Instance.TriggerLootHit(coreLoot); }
-            }
+            HandleCoreClick(coreHit);
         }
         else if (enemyHit.collider != null)
         {
-            Enemy enemy = enemyHit.collider.GetComponentInParent<Enemy>();
-
-            if (enemy != null && !enemy.IsDead())
-            {
-                enemy.OnEnemyClicked();
-                EventManager.Instance.TriggerEnemyHit(enemy);
-            }
+            HandleEnemyClick(enemyHit);
         }
     }
+
+    private void HandleLootClick(RaycastHit2D hit)
+    {
+        Loot loot = hit.collider.GetComponent<Loot>();
+        if (loot != null && !loot.IsCollected)
+        {
+            Debug.Log("LOOT");
+            loot.OnLootClicked();
+        }
+    }
+
+    private void HandleCoreClick(RaycastHit2D hit)
+    {
+        Enemy enemy = hit.collider.GetComponentInParent<Enemy>();
+        if (enemy == null || enemy.IsDead()) return;
+
+        Debug.Log("COREHIT");
+
+        // Get reaction time before killing enemy
+        float timeTaken = enemy.EnemyDeathTimeTaken();
+
+        // Kill the enemy
+        enemy.OnEnemyClicked();
+
+        // Notify systems
+        EventManager.Instance.TriggerEnemyHit(enemy);
+
+        // Delegate core hit handling to LevelManager (loot decision + light reward)
+        LevelManager.Instance?.HandleCoreHit(enemy, timeTaken);
+    }
+
+    private void HandleEnemyClick(RaycastHit2D hit)
+    {
+        Enemy enemy = hit.collider.GetComponentInParent<Enemy>();
+        if (enemy == null || enemy.IsDead()) return;
+
+        enemy.OnEnemyClicked();
+        EventManager.Instance.TriggerEnemyHit(enemy);
+    }
+
     private void TogglePause()
     {
-        // Don't allow pausing in MainMenu, LevelComplete, or GameOver states
         if (GameManager.Instance.IsInMainMenu ||
             GameManager.Instance.IsInLevelComplete ||
             GameManager.Instance.IsInGameOver)
@@ -178,27 +172,18 @@ public class InputManager : MonoBehaviour
 
         if (GameManager.Instance.IsInPaused)
         {
-            // Resume from pause - GameManager will restore previous state
             GameManager.Instance.ResumeFromPause();
 
-            // Only resume combat if we're returning to LevelGameplay
             if (GameManager.Instance.IsInLevelGameplay)
             {
-                if (LevelManager.Instance != null)
-                {
-                    LevelManager.Instance.ResumeCombat();
-                }
+                LevelManager.Instance?.ResumeCombat();
             }
         }
         else if (GameManager.Instance.IsInBase || GameManager.Instance.IsInLevelGameplay)
         {
-            // Pause combat if we're currently in LevelGameplay
             if (GameManager.Instance.IsInLevelGameplay)
             {
-                if (LevelManager.Instance != null)
-                {
-                    LevelManager.Instance.PauseCombat();
-                }
+                LevelManager.Instance?.PauseCombat();
             }
 
             GameManager.Instance.TransitionToPaused();

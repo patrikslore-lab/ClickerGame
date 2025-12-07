@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1916303089462654363}
   - component: {fileID: -6935743172217763084}
   - component: {fileID: 6579534550007944909}
-  - component: {fileID: 8076173337463886685}
+  - component: {fileID: -6694199967920645771}
   m_Layer: 0
   m_Name: CaveDoor
   m_TagString: Untagged
@@ -114,7 +114,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &8076173337463886685
+--- !u!114 &-6694199967920645771
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -123,7 +123,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 4777360585535520036}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4220a08f641d4804397e3ec3a50d960b, type: 3}
+  m_Script: {fileID: 11500000, guid: 843d034f8e090d24cbb2236ae38dc186, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoorController
-  openDoor: {fileID: 21300000, guid: 08e947d07a847da42813bd147757e30e, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::DoorAnimationHelper

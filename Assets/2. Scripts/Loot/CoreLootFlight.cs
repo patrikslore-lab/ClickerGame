@@ -1,6 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Handles the flying animation for core loot towards the UI.
+/// Auto-collects via LevelManager when reaching target.
+/// </summary>
 public class CoreLootFlight : MonoBehaviour
 {
     [SerializeField] private float flyDuration = 1.5f;
@@ -42,12 +46,12 @@ public class CoreLootFlight : MonoBehaviour
         transform.position = targetPosition;
         Debug.Log("CoreLootFlight: Reached target position");
 
-        // Notify that core has been collected
+        // Collect via LevelManager
         Loot loot = GetComponent<Loot>();
         if (loot != null)
         {
-            Debug.Log("CoreLootFlight: Found Loot component, calling LootManager.Collect");
-            LootManager.Instance.Collect(loot);
+            Debug.Log("CoreLootFlight: Found Loot component, collecting via LevelManager");
+            LevelManager.Instance?.CollectLoot(loot);
         }
         else
         {

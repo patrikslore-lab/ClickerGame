@@ -2,6 +2,10 @@ using UnityEngine;
 
 public enum LootType { Wood, Core }
 
+/// <summary>
+/// Base class for loot items.
+/// Collection handled via direct calls from InputManager -> LevelManager -> LootController
+/// </summary>
 public class Loot : MonoBehaviour
 {
     public LootType lootType;
@@ -9,52 +13,42 @@ public class Loot : MonoBehaviour
     protected SpriteRenderer spriteRenderer;
     protected Collider2D lootCollider;
     protected Animator animator;
-    protected PlayerConfig playerConfig;
     private bool isCollected = false;
 
+    public bool IsCollected => isCollected;
 
     protected virtual void Awake()
     {
         animator = GetComponent<Animator>();
-        playerConfig = GameManager.Instance.GetPlayerConfig();
-
-        EventManager.Instance.LootClicked += HandleLootClicked;
-
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        lootCollider = GetComponent<Collider2D>();
         gameObject.tag = "Loot";
     }
 
-    /// Called by InputManager when loot is clicked
-    private void HandleLootClicked(Loot loot)
+    /// <summary>
+    /// Called by InputManager when this loot is clicked.
+    /// Routes through LevelManager -> LootController for collection.
+    /// </summary>
+    public void OnLootClicked()
     {
-        if (loot == this)
-        {
-            if (isCollected) return;
+        if (isCollected) return;
 
-            isCollected = true;
-            LootManager.Instance.Collect(this);
-        }
+        isCollected = true;
+        LevelManager.Instance?.CollectLoot(this);
     }
 
+    /// <summary>
+    /// Play despawn animation and destroy the loot object.
+    /// Called by LootController after collection.
+    /// </summary>
     public void PlayDespawnAnimation()
     {
-        // Disable collider first so it can't be clicked again
         if (lootCollider != null)
-        {
             lootCollider.enabled = false;
-        }
-        
-        // Disable renderer
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.enabled = false;
-        }
-        
-        // Destroy after animation completes
-        Destroy(gameObject);
-    }
 
-    private void OnDestroy()
-    {
-        EventManager.Instance.LootClicked -= HandleLootClicked;
+        if (spriteRenderer != null)
+            spriteRenderer.enabled = false;
+
+        Destroy(gameObject);
     }
 }

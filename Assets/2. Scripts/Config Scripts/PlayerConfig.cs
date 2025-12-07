@@ -6,7 +6,7 @@ public class PlayerConfig : ScriptableObject
     [Header("Resources")]
     public float corePieces = 0f;
     public float wood = 0f;
-    
+
     [Header("Level")]
     public int currentLevel = 1;
 
@@ -20,11 +20,13 @@ public class PlayerConfig : ScriptableObject
     public float protectorMaxActiveTime = 6f;
     public float protectorLightAdditionRate = 0.15f;
 
-    [Header("Loot Drop Rates")]
+    [Header("Loot Settings")]
     public int woodDropAmount = 3;
     public int corePieceAmount = 1;
+    [Tooltip("Maximum reaction time (ms) to earn core loot on core hit")]
+    public float coreLootMaxReactionTime = 2000f;
 
-    [Header("Enemy Light Reduction Ratez")]
+    [Header("Enemy Light Reduction Rates")]
     public float flyingRatLightReductionRate = 0.2f;
     public float bringerOfDeathLightReductionRate = 0.5f;
     public float crowooonLightReductionRate = 1f;
@@ -42,13 +44,16 @@ public class PlayerConfig : ScriptableObject
     public float juneMoveSpeed = 5f;
 
     [Header("Light Health System")]
-    public float lightHealthCurrent = 10f;      // Current light health value
-    public float lightHealthMax = 10f;          // Maximum light health value
+    public float lightHealthCurrent = 10f;
+    public float lightHealthMax = 10f;
 
     private void OnValidate()
     {
         // Ensure health values stay within valid ranges
         lightHealthCurrent = Mathf.Clamp(lightHealthCurrent, 0f, lightHealthMax);
-        lightHealthMax = Mathf.Max(0.1f, lightHealthMax); // Prevent zero/negative max
+        lightHealthMax = Mathf.Max(0.1f, lightHealthMax);
+
+        // Ensure reaction time is positive
+        coreLootMaxReactionTime = Mathf.Max(0f, coreLootMaxReactionTime);
     }
 }

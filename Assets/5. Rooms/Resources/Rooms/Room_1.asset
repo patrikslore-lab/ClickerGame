@@ -20,17 +20,17 @@ MonoBehaviour:
     spawnCount: 1
     delayBetweenEnemies: 0
     delayBeforeNext: 3
-    doorBreakOnDefeat: 0
+    doorBreakOnDefeat: 1
   - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
     spawnCount: 1
     delayBetweenEnemies: 0
     delayBeforeNext: 3
-    doorBreakOnDefeat: 0
+    doorBreakOnDefeat: 2
   - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
     spawnCount: 1
     delayBetweenEnemies: 0
     delayBeforeNext: 3
-    doorBreakOnDefeat: 0
+    doorBreakOnDefeat: 3
   - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
     spawnCount: 1
     delayBetweenEnemies: 0
@@ -96,7 +96,7 @@ MonoBehaviour:
   minY: -7
   maxY: 3.5
   spawnZ: -1
-  woodSpawnFrequencySeconds: 10000
+  woodSpawnFrequencySeconds: 2
   lootMinX: 14
   lootMaxX: -14
   lootMinY: -7

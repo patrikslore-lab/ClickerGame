@@ -3,14 +3,9 @@ using UnityEngine;
 
 public class DoorController : MonoBehaviour
 {
+    private GameObject doorPrefab;
+    private GameObject doorInstance;
     private Animator doorAnimator;
-    private Sprite doorSprite;
-
-    [SerializeField] Sprite openDoor;
-    void Start()
-    {
-        doorAnimator = GetComponent<Animator>();
-    }
 
     void OnEnable()
     {
@@ -24,6 +19,13 @@ public class DoorController : MonoBehaviour
         EventManager.Instance.doorBreak1 -= DoorBreak1;
         EventManager.Instance.doorBreak2 -= DoorBreak2;
         EventManager.Instance.doorBreak3 -= DoorBreak3;
+    }
+
+    public void InstantiateDoor()
+    {
+        doorPrefab = LevelManager.Instance.CurrentRoomConfig.door;
+        doorInstance = Instantiate(doorPrefab, new Vector2(0, 8.2f), Quaternion.identity);
+        doorAnimator = doorInstance.GetComponent<Animator>();
     }
 
     public void DoorBreak1()
@@ -44,9 +46,7 @@ public class DoorController : MonoBehaviour
     {
         Debug.Log("Door break animation complete - triggering level completion");
 
-        // Transition to level complete state - state handles UI visibility
-        GameManager.Instance.TransitionToLevelComplete();
-
-        doorSprite = openDoor;
+        // Transition to level complete state
+        LevelManager.Instance.TransitionToLevelComplete();
     }
 }

@@ -4,7 +4,7 @@ using System.Linq;
 
 /// <summary>
 /// Singleton manager for level lifecycle.
-/// Orchestrates controllers for intro, enemies, and loot.
+/// Orchestrates controllers for intro, enemies, loot, and lantern.
 /// </summary>
 public class LevelManager : MonoBehaviour
 {
@@ -17,7 +17,9 @@ public class LevelManager : MonoBehaviour
     [Header("Controllers")]
     [SerializeField] private LevelIntroController introController;
     [SerializeField] private EnemySpawnController enemySpawnController;
-    [SerializeField] private LootSpawnController lootSpawnController;
+    [SerializeField] private LootController lootController;
+    [SerializeField] private LanternController lanternController;
+    [SerializeField] private DoorController doorController;
 
     private RoomConfig currentRoomConfig;
     private PlayerConfig playerConfig;
@@ -41,7 +43,7 @@ public class LevelManager : MonoBehaviour
     }
 
     //===========================================
-    // PUBLIC API
+    // PUBLIC API - LEVEL LIFECYCLE
     //===========================================
 
     public void LoadLevel(int levelNumber)
@@ -59,10 +61,8 @@ public class LevelManager : MonoBehaviour
             levelSpriteRenderer.sprite = currentRoomConfig.RoomSprite;
         }
 
-        if (currentRoomConfig.door != null)
-        {
-            Instantiate(currentRoomConfig.door, new Vector2(0, 8.2f), Quaternion.identity);
-        }
+        doorController.InstantiateDoor();
+        lanternController?.ResetState();
 
         Debug.Log($"Level {levelNumber} loaded");
     }
@@ -93,7 +93,8 @@ public class LevelManager : MonoBehaviour
         }
 
         enemySpawnController?.StartWaves(currentRoomConfig);
-        lootSpawnController?.StartLootSpawning(currentRoomConfig);
+        lootController?.StartSpawning(currentRoomConfig);
+        lanternController?.StartGameplay();
 
         Debug.Log("Combat session started");
     }
@@ -101,7 +102,8 @@ public class LevelManager : MonoBehaviour
     public void StopCombatSession()
     {
         enemySpawnController?.StopWaves();
-        lootSpawnController?.StopLootSpawning();
+        lootController?.StopSpawning();
+        lanternController?.StopGameplay();
 
         Debug.Log("Combat session stopped");
     }
@@ -116,14 +118,69 @@ public class LevelManager : MonoBehaviour
         enemySpawnController?.Resume();
     }
 
-    public void SpawnCoreLoot(Vector3 position)
+    //===========================================
+    // PUBLIC API - CORE HIT (delegates to controllers)
+    //===========================================
+
+    /// <summary>
+    /// Handle core hit - delegates to relevant controllers.
+    /// Called by InputManager when a core is clicked.
+    /// </summary>
+    public void HandleCoreHit(Enemy enemy, float timeTaken)
     {
-        lootSpawnController?.SpawnCoreLoot(position);
+        // Loot decision (spawn core loot if fast enough)
+        lootController?.HandleCoreHit(enemy, timeTaken);
+
+        // Light reward (add light health)
+        lanternController?.HandleCoreHit(enemy);
     }
+
+    //===========================================
+    // PUBLIC API - LOOT (delegates to LootController)
+    //===========================================
+
+    /// <summary>
+    /// Collect loot and add resources to player
+    /// </summary>
+    public void CollectLoot(Loot loot)
+    {
+        lootController?.Collect(loot);
+    }
+
+    /// <summary>
+    /// Pay resources for purchases/upgrades.
+    /// Returns true if payment successful, false if insufficient resources.
+    /// </summary>
+    public bool PayResource(LootType resourceType, float amount)
+    {
+        return lootController?.Pay(resourceType, amount) ?? false;
+    }
+
+    //===========================================
+    // PUBLIC API - OTHER
+    //===========================================
 
     public LevelIntroController GetIntroController()
     {
         return introController;
+    }
+
+    public RoomConfig GetCurrentRoomConfig() => currentRoomConfig;
+
+    //===========================================
+    // STATE CONTROL
+    //===========================================
+
+    //IS LEVEL COMPLETE?
+
+    public void DoorAnimationFinished()
+    {
+        TransitionToLevelComplete();
+    }
+    //Called by the DOOR CONTROLLER upon animation finish
+    public void TransitionToLevelComplete()
+    {          
+        GameManager.Instance.TransitionToLevelComplete();
     }
 
     //===========================================
@@ -148,6 +205,4 @@ public class LevelManager : MonoBehaviour
 
         Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
     }
-
-    public RoomConfig GetCurrentRoomConfig() => currentRoomConfig;
 }

@@ -53,16 +53,7 @@ namespace GameStateMachine
             gameManager.TransitionToGameOver();
         }
 
-        public void Update()
-        {
-            // Combat systems run independently:
-            // - EnemySpawnController: wave spawning via coroutines
-            // - LootSpawnController: wood and core loot spawning
-            // - Enemy scripts: behavior and attacks
-            // - LightManager: health tracking (event-driven)
-            // - InputManager: clicks and pause
-            // - DoorController: triggers level complete on final break
-        }
+        public void Update(){}
 
         public void Exit()
         {

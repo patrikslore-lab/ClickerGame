@@ -119,68 +119,11 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &7640156
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7640157}
-  - component: {fileID: 7640158}
-  m_Layer: 0
-  m_Name: LootSpawnController
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7640157
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7640156}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 411847933}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7640158
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7640156}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 89fa66c204ba3534b90638b1e9ddad22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LootSpawnController
 --- !u!1 &15578539 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
   m_PrefabInstance: {fileID: 5284081842367344328}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &15578544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 15578539}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 58bc8366f8e90714099a24137083466e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LightManager
-  flickerController: {fileID: 0}
 --- !u!114 &15578545
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -307,6 +250,11 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   lightFadeDuration: 1
+  flickerFrequency: 1
+  flickerAmplitude: 0.2
+  flickerPhaseOffset: 0
+  noiseDetail: 1
+  noiseVariation: 0
 --- !u!1 &19644982
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,7 +854,7 @@ PrefabInstance:
       objectReference: {fileID: 1767639127}
     - target: {fileID: 2320548348162694462, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Upgrading
+      value: ShowUpgradePanel
       objectReference: {fileID: 0}
     - target: {fileID: 2320548348162694462, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
@@ -1013,6 +961,10 @@ PrefabInstance:
     - target: {fileID: 5348578083631891165, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6707884128621312385, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
+      propertyPath: m_Name
+      value: Buy Upgrades
       objectReference: {fileID: 0}
     - target: {fileID: 6980209672814734320, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
       propertyPath: m_LocalScale.x
@@ -1363,8 +1315,9 @@ Transform:
   m_Children:
   - {fileID: 232844914}
   - {fileID: 1650999678}
-  - {fileID: 7640157}
   - {fileID: 1919103410}
+  - {fileID: 537325577}
+  - {fileID: 1147605161}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &458476374
@@ -1889,6 +1842,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523366834}
   m_CullTransparentMesh: 1
+--- !u!1 &537325576
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 537325577}
+  - component: {fileID: 537325578}
+  m_Layer: 0
+  m_Name: LootController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &537325577
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537325576}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 411847933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &537325578
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 537325576}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3cb4b85db7a0c42a89fa052252a5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LootController
 --- !u!1 &581203486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2676,7 +2673,9 @@ MonoBehaviour:
   levelGameObject: {fileID: 458476374}
   introController: {fileID: 1650999679}
   enemySpawnController: {fileID: 232844915}
-  lootSpawnController: {fileID: 7640158}
+  lootController: {fileID: 537325578}
+  lanternController: {fileID: 15578554}
+  doorController: {fileID: 1147605162}
 --- !u!1 &1026661733
 GameObject:
   m_ObjectHideFlags: 0
@@ -2886,6 +2885,50 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2943633736000438796, guid: 0d8d165ce8d41b34cbbe2f98e5ce6794, type: 3}
   m_PrefabInstance: {fileID: 984128284}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1147605160
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1147605161}
+  - component: {fileID: 1147605162}
+  m_Layer: 0
+  m_Name: DoorController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1147605161
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147605160}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 411847933}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1147605162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147605160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4220a08f641d4804397e3ec3a50d960b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoorController
 --- !u!114 &1182942148 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 8988019518203414033, guid: b9ad4690a1d1d294eaf0af62f0285df3, type: 3}
@@ -3065,8 +3108,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SpawnManagerScript, Assembly-CSharp
+      - m_Target: {fileID: 1919103411}
+        m_TargetAssemblyTypeName: DoggySpawnController, Assembly-CSharp
         m_MethodName: SpawnBaseDoggy
         m_Mode: 1
         m_Arguments:
@@ -3583,7 +3626,7 @@ Transform:
   - {fileID: 1934655530}
   - {fileID: 1024732390}
   - {fileID: 1433942657}
-  - {fileID: 1980229766}
+  - {fileID: 1918164509}
   - {fileID: 1767639126}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4417,12 +4460,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1918164507}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1554191334}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1919103408
 GameObject:
@@ -4513,50 +4556,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 23d828617e14bc742a73722c8911b258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::UpgradeManager
---- !u!1 &1980229765
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1980229766}
-  - component: {fileID: 1980229767}
-  m_Layer: 0
-  m_Name: LootManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1980229766
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1980229765}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1554191334}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1980229767
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1980229765}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 375ed7a4fb7d2e544b51f9d21168eee2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LootManager
 --- !u!1001 &2134303854
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4829,9 +4828,6 @@ PrefabInstance:
       addedObject: {fileID: 15578545}
     - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 15578544}
-    - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 15578546}
     - targetCorrespondingSourceObject: {fileID: 5024898797625337046, guid: f47795fb421c7d64b8b2ef82645fca47, type: 3}
       insertIndex: -1
@@ -4988,7 +4984,6 @@ SceneRoots:
   - {fileID: 411847933}
   - {fileID: 19644983}
   - {fileID: 519420032}
-  - {fileID: 1918164509}
   - {fileID: 619394802}
   - {fileID: 5284081842367344328}
   - {fileID: 458476376}

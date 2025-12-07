@@ -89,8 +89,8 @@ public class LooterAbility : BaseAbility
         float flyDuration = Vector3.Distance(juneCharacter.JuneInstance.transform.position, targetLoot.transform.position) / playerConfig.juneMoveSpeed;
         yield return juneCharacter.MoveJuneToPosition(targetLoot.transform.position, flyDuration);
 
-        // Collect the loot
-        LootManager.Instance.Collect(targetLoot);
+        // Collect the loot via LevelManager
+        LevelManager.Instance?.CollectLoot(targetLoot);
         Debug.Log($"June collected: {targetLoot.lootType}");
 
         // Return home (also releases control back to JuneCharacter)
@@ -104,7 +104,7 @@ public class LooterAbility : BaseAbility
 
         foreach (Loot loot in allLoot)
         {
-            if (loot.lootType == LootType.Wood)
+            if (loot.lootType == LootType.Wood && !loot.IsCollected)
             {
                 float distance = Vector3.Distance(juneCharacter.JuneInstance.transform.position, loot.transform.position);
                 if (distance < closestDistance)
