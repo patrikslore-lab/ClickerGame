@@ -79,14 +79,16 @@ public class UIManager : MonoBehaviour
 
     void Update()
     {
-        if (!CooldownController.Instance.IsOnCooldown)
+        if (PlayerManager.Instance == null) return;
+
+        if (!PlayerManager.Instance.IsOnCooldown)
         {
-        juneCooldownTextBox.text = "READY";
-        } 
+            juneCooldownTextBox.text = "READY";
+        }
         else
         {
-        juneCooldownTextBox.text = $"{CooldownController.Instance.CooldownRemaining:F0}";
-        }   
+            juneCooldownTextBox.text = $"{PlayerManager.Instance.CooldownRemaining:F0}";
+        }
     }
 
     public void ShowUpgradePanel()

@@ -27,6 +27,10 @@ public class LanternController : MonoBehaviour
     // SERIALIZED FIELDS
     //===========================================
 
+    [Header("Lantern Prefab")]
+    [SerializeField] private GameObject lanternPrefab;
+    [SerializeField] private Vector3 spawnPosition = new Vector3(0f, -5f, 0f);
+
     [Header("Movement Settings (Intro)")]
     [SerializeField] private Vector3 targetPosition = Vector3.zero;
     [SerializeField] private float moveDuration = 1.5f;
@@ -46,6 +50,7 @@ public class LanternController : MonoBehaviour
     // PRIVATE FIELDS
     //===========================================
 
+    private GameObject lanternInstance;
     private Light2D lightSettings;
     private PlayerConfig playerConfig;
 
@@ -61,20 +66,18 @@ public class LanternController : MonoBehaviour
     private bool isGameOver = false;
 
     //===========================================
+    // PUBLIC ACCESSORS
+    //===========================================
+
+    public GameObject LanternInstance => lanternInstance;
+    public bool IsSpawned => lanternInstance != null;
+
+    //===========================================
     // UNITY LIFECYCLE
     //===========================================
 
     private void Start()
     {
-        lightSettings = GetComponent<Light2D>();
-
-        if (lightSettings == null)
-        {
-            Debug.LogError("LanternController requires a Light2D component!");
-            enabled = false;
-            return;
-        }
-
         playerConfig = GameManager.Instance.GetPlayerConfig();
     }
 
@@ -87,6 +90,64 @@ public class LanternController : MonoBehaviour
     }
 
     //===========================================
+    // SPAWNING
+    //===========================================
+
+    /// <summary>
+    /// Instantiate the lantern at spawn position.
+    /// Call this when entering a level.
+    /// </summary>
+    public void SpawnLantern()
+    {
+        if (lanternInstance != null)
+        {
+            Debug.LogWarning("LanternController: Lantern already spawned!");
+            return;
+        }
+
+        if (lanternPrefab == null)
+        {
+            Debug.LogError("LanternController: Lantern prefab not assigned!");
+            return;
+        }
+
+        lanternInstance = Instantiate(lanternPrefab, spawnPosition, Quaternion.identity);
+        lightSettings = lanternInstance.GetComponent<Light2D>();
+
+        if (lightSettings == null)
+        {
+            Debug.LogError("LanternController: Lantern prefab missing Light2D component!");
+        }
+
+        Debug.Log($"LanternController: Lantern spawned at {spawnPosition}");
+    }
+
+    /// <summary>
+    /// Instantiate the lantern at a specific position.
+    /// </summary>
+    public void SpawnLantern(Vector3 position)
+    {
+        spawnPosition = position;
+        SpawnLantern();
+    }
+
+    /// <summary>
+    /// Destroy the lantern instance.
+    /// Call this when leaving a level or returning to base.
+    /// </summary>
+    public void DespawnLantern()
+    {
+        if (lanternInstance == null) return;
+
+        StopFlicker();
+        Destroy(lanternInstance);
+        lanternInstance = null;
+        lightSettings = null;
+
+        Debug.Log("LanternController: Lantern despawned");
+    }
+
+    //===========================================
     // INTRO PHASE (called by LevelIntroController)
     //===========================================
 
@@ -96,6 +157,12 @@ public class LanternController : MonoBehaviour
     /// </summary>
     public IEnumerator MoveToCenter()
     {
+        if (lanternInstance == null)
+        {
+            Debug.LogError("LanternController: Cannot move - lantern not spawned!");
+            yield break;
+        }
+
         savedLightValue = playerConfig.lightHealthCurrent;
         if (lightSettings != null)
         {
@@ -103,17 +170,17 @@ public class LanternController : MonoBehaviour
         }
 
         float elapsed = 0f;
-        Vector3 start = transform.position;
+        Vector3 start = lanternInstance.transform.position;
 
         while (elapsed < moveDuration)
         {
             elapsed += Time.deltaTime;
             float t = movementCurve.Evaluate(elapsed / moveDuration);
-            transform.position = Vector3.Lerp(start, targetPosition, t);
+            lanternInstance.transform.position = Vector3.Lerp(start, targetPosition, t);
             yield return null;
         }
 
-        transform.position = targetPosition;
+        lanternInstance.transform.position = targetPosition;
     }
 
     /// <summary>
@@ -145,7 +212,13 @@ public class LanternController : MonoBehaviour
     /// </summary>
     public void SnapToFinalState()
     {
-        transform.position = targetPosition;
+        if (lanternInstance == null)
+        {
+            Debug.LogError("LanternController: Cannot snap - lantern not spawned!");
+            return;
+        }
+
+        lanternInstance.transform.position = targetPosition;
 
         if (lightSettings != null)
         {
@@ -215,7 +288,6 @@ public class LanternController : MonoBehaviour
     {
         if (EventManager.Instance == null) return;
 
-        // These are broadcast events - many enemies can trigger LightDestruction
         EventManager.Instance.LightDestruction += HandleLightDamage;
         EventManager.Instance.ProtectorLightAddition += HandleProtectorHeal;
 
@@ -319,7 +391,7 @@ public class LanternController : MonoBehaviour
 
     private void StartFlicker()
     {
-        if (isFlickering) return;
+        if (isFlickering || lanternInstance == null) return;
 
         isFlickering = true;
         flickerCoroutine = StartCoroutine(FlickerLoop());

@@ -152,6 +152,9 @@ public class InputManager : MonoBehaviour
 
         // Delegate core hit handling to LevelManager (loot decision + light reward)
         LevelManager.Instance?.HandleCoreHit(enemy, timeTaken);
+
+        // Route to PlayerManager for ability handling
+        PlayerManager.Instance?.OnEnemyHit(enemy);
     }
 
     private void HandleEnemyClick(RaycastHit2D hit)
@@ -161,6 +164,9 @@ public class InputManager : MonoBehaviour
 
         enemy.OnEnemyClicked();
         EventManager.Instance.TriggerEnemyHit(enemy);
+
+        // Route to PlayerManager for ability handling
+        PlayerManager.Instance?.OnEnemyHit(enemy);
     }
 
     private void TogglePause()

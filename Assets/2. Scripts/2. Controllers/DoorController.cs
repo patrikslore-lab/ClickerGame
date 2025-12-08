@@ -28,6 +28,11 @@ public class DoorController : MonoBehaviour
         doorAnimator = doorInstance.GetComponent<Animator>();
     }
 
+    public void DestroyDoor()
+    {
+        Destroy(doorInstance);
+    }
+
     public void DoorBreak1()
     {
         doorAnimator.SetBool("break1", true);

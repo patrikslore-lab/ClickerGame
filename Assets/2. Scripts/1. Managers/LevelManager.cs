@@ -62,7 +62,7 @@ public class LevelManager : MonoBehaviour
         }
 
         doorController.InstantiateDoor();
-        lanternController?.ResetState();
+        lanternController?.SpawnLantern(new Vector2 (0,-15));
 
         Debug.Log($"Level {levelNumber} loaded");
     }
@@ -183,6 +183,15 @@ public class LevelManager : MonoBehaviour
     public void TransitionToLevelComplete()
     {          
         GameManager.Instance.TransitionToLevelComplete();
+    }
+
+    //Called by the UI Manager Next Level button
+    public void CompleteLevel()
+    {
+        DestroyAllCombatObjects();
+        lanternController.DespawnLantern();
+        doorController.DestroyDoor();
+        GameManager.Instance.TransitionToNextLevel();
     }
 
     //===========================================
