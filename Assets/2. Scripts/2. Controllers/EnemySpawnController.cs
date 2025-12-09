@@ -147,57 +147,93 @@ public class EnemySpawnController : MonoBehaviour
     //==============================================
     //GAME OVER SEQUENCE INSTANTIATOR/MOVER
     //==============================================
+
+    [SerializeField] private int gameOverSequenceEnemyNumber = 20;
     private List<GameObject> gameOverEnemies = new List<GameObject>();
+
     public IEnumerator SpawnGameOverWave()
     {
         gameOverEnemies.Clear();
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < gameOverSequenceEnemyNumber; i++)
         {
-            // Spawn enemy
-            Instantiate(corePrefab, CalculateSpawnPosition(), Quaternion.identity);
-            gameOverEnemies.Add(corePrefab);
-            yield return new WaitForSeconds(0.1f);
+            Vector3 position = CalculateGameOverSpawnPosition();
+            GameObject enemy = Instantiate(corePrefab, position, Quaternion.identity);
+            gameOverEnemies.Add(enemy);
+            
+            Debug.Log($"Spawned game over enemy {i} at {position}");
+            yield return new WaitForSeconds(0.05f);
         }
+        
+        Debug.Log($"Game over enemies spawned: {gameOverEnemies.Count}");
     }
 
-
-    public IEnumerable ConvergeOnPlayer(Vector2 playerPosition, float duration = 2f)
+    private Vector3 CalculateGameOverSpawnPosition()
     {
-    // Store starting positions
-    Vector2[] startPositions = new Vector2[gameOverEnemies.Count];
-    Vector2[] endPositions = new Vector2[gameOverEnemies.Count];
-    
-    for (int i = 0; i < gameOverEnemies.Count; i++)
-    {
-        if (gameOverEnemies[i] == null) continue;
-        
-        startPositions[i] = gameOverEnemies[i].transform.position;
-        
-        // Calculate position 1 unit shy of target
-        Vector2 direction = (playerPosition - startPositions[i]).normalized;
-        endPositions[i] = playerPosition - direction * 1f;
+        float xCoord = Random.Range(LevelManager.Instance.CurrentRoomConfig.MinX, LevelManager.Instance.CurrentRoomConfig.MaxX);
+        float yCoord = Random.Range(LevelManager.Instance.CurrentRoomConfig.MinY, LevelManager.Instance.CurrentRoomConfig.MaxY);
+        // Hardcoded bounds for game over sequence (or pull from a config)
+        return new Vector2 (xCoord, yCoord);
     }
-    
-    // Move all enemies simultaneously
-    float elapsed = 0f;
-    
-    while (elapsed < duration)
+
+    public IEnumerator ConvergeOnPlayer(Vector2 playerPosition, float duration = 2f)
     {
-        elapsed += Time.deltaTime;
-        float t = elapsed / duration;
+        Debug.Log($"ConvergeOnPlayer called. Enemy count: {gameOverEnemies.Count}");
         
+        if (gameOverEnemies.Count == 0)
+        {
+            Debug.LogWarning("No game over enemies to converge!");
+            yield break;
+        }
+
+        // Store starting positions
+        Vector2[] startPositions = new Vector2[gameOverEnemies.Count];
+        Vector2[] endPositions = new Vector2[gameOverEnemies.Count];
+
         for (int i = 0; i < gameOverEnemies.Count; i++)
         {
             if (gameOverEnemies[i] == null) continue;
+
+            startPositions[i] = gameOverEnemies[i].transform.position;
+
+            Vector2 direction = (playerPosition - startPositions[i]).normalized;
+            endPositions[i] = playerPosition - direction * 1f;
             
-            gameOverEnemies[i].transform.position = Vector3.Lerp(
-                startPositions[i], 
-                endPositions[i], 
-                t
-            );
+            Debug.Log($"Enemy {i}: {startPositions[i]} -> {endPositions[i]}");
+        }
+
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+
+            for (int i = 0; i < gameOverEnemies.Count; i++)
+            {
+                if (gameOverEnemies[i] == null) continue;
+
+                gameOverEnemies[i].transform.position = Vector3.Lerp(
+                    startPositions[i],
+                    endPositions[i],
+                    t
+                );
+            }
+
+            yield return null;
         }
         
-        yield return null;
+        Debug.Log("ConvergeOnPlayer complete");
     }
+
+    public void DestroyGameOverEnemies()
+    {
+        foreach (GameObject enemy in gameOverEnemies)
+        {
+            if (enemy != null)
+            {
+                Destroy(enemy);
+            }
+        }
+        gameOverEnemies.Clear();
     }
 }

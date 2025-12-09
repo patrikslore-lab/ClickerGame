@@ -328,4 +328,9 @@ public class UIManager : MonoBehaviour
     {
         gameOverPanel.SetActive(true);
     }
+
+    public void LerpHidePanels()
+    {
+        
+    }
 }

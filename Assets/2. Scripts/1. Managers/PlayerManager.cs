@@ -146,4 +146,13 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Not enough wood for doggy!");
         }
     }
+
+
+    //=============================================
+    //DISABLE JUNE
+    //=============================================
+    public void DisableJune()
+    {
+        juneGameObject?.SetActive(false);
+    }
 }

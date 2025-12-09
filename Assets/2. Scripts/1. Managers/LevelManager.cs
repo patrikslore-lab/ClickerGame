@@ -215,6 +215,7 @@ public class LevelManager : MonoBehaviour
         {
             Destroy(lootItem.gameObject);
         }
+        enemySpawnController?.DestroyGameOverEnemies();
 
         Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
     }
@@ -222,6 +223,11 @@ public class LevelManager : MonoBehaviour
     //=====================================================
     //GAMEOVER SEQUENCE ORCHESTRATORS
     //=====================================================
+
+    public void PlayGameOverSequence()
+    {
+        gameOverSequenceController.PlayGameOverSequence();
+    }
     public IEnumerator SpawnGameOverEnemies()
     {
         yield return enemySpawnController?.SpawnGameOverWave();

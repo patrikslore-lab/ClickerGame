@@ -30,17 +30,12 @@ public class GameOverSequenceController : MonoBehaviour
         activeGameOverSequence = StartCoroutine(GOSSequence());
     }
 
-    private void CompleteIntro()
-    {
-        gameOverComplete = true;
-        UIManager.Instance.OnGameOverSequenceComplete();
-        Debug.Log("=== Level Intro Complete ===");
-    }
 
     private IEnumerator GOSSequence()
     {
         Debug.Log("=== Starting Game Over Sequence ===");
 
+        PlayerManager.Instance.DisableJune();
         // Phase 1: Light dims to 0
         Debug.Log("Phase 1: Light Dimming");
         yield return DimGlobalLight(3f);
@@ -51,14 +46,22 @@ public class GameOverSequenceController : MonoBehaviour
         yield return LevelManager.Instance.SpawnGameOverEnemies();
         Debug.Log("Phase 2 Overwhelm Complete");
 
+        //CONVERGING COMMENTED OUT - UNCOMMENT TO ENABLE
+        
         // Phase 3: Enemy Cores move to player position (above UI)
-        Debug.Log("Phase 3: UI revealing...");
-        yield return LevelManager.Instance.ConvergeOnPlayer();
-        Debug.Log("Phase 3 complete");
+        //Debug.Log("Phase 3: UI revealing...");
+        //yield return LevelManager.Instance.ConvergeOnPlayer();
+        //Debug.Log("Phase 3 complete");
 
 
         activeGameOverSequence = null;
         CompleteIntro();
+    }
+        private void CompleteIntro()
+    {
+        gameOverComplete = true;
+        UIManager.Instance.OnGameOverSequenceComplete();
+        Debug.Log("=== Level Intro Complete ===");
     }
 
     private IEnumerator DimGlobalLight(float duration = 3f)
