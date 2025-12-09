@@ -47,8 +47,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Sprite bRankSprite;
     [SerializeField] private Sprite cRankSprite;
     [SerializeField] private Sprite dRankSprite;
-
     private PlayerConfig playerConfig;
+    [SerializeField] private DialogueUIController dialogueController;
+    public void StartDialogue(DialogueData data) => dialogueController?.StartDialogue(data);
 
     private void Awake()
     {

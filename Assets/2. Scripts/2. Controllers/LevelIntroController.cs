@@ -7,7 +7,7 @@ public class LevelIntroController : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private bool allowSkip = true;
     [SerializeField] private KeyCode skipKey = KeyCode.Space;
-    
+
     [Header("Phase Controllers")]
     [SerializeField] private LanternController lanternController;
     
