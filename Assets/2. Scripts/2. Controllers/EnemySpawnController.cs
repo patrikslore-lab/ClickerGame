@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Handles enemy wave spawning for a combat session.
@@ -12,8 +13,10 @@ public class EnemySpawnController : MonoBehaviour
     private RoomConfig roomConfig;
     private Coroutine waveCoroutine;
     private bool isPaused = false;
-
     public bool IsPaused => isPaused;
+    [SerializeField] private GameObject corePrefab;
+
+    private Vector2 playerPosition = new Vector2(0, -7);
 
     public void StartWaves(RoomConfig config)
     {
@@ -139,5 +142,62 @@ public class EnemySpawnController : MonoBehaviour
             if (!isPaused) elapsed += Time.deltaTime;
             yield return null;
         }
+    }
+
+    //==============================================
+    //GAME OVER SEQUENCE INSTANTIATOR/MOVER
+    //==============================================
+    private List<GameObject> gameOverEnemies = new List<GameObject>();
+    public IEnumerator SpawnGameOverWave()
+    {
+        gameOverEnemies.Clear();
+        for (int i = 0; i < 10; i++)
+        {
+            // Spawn enemy
+            Instantiate(corePrefab, CalculateSpawnPosition(), Quaternion.identity);
+            gameOverEnemies.Add(corePrefab);
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+
+    public IEnumerable ConvergeOnPlayer(Vector2 playerPosition, float duration = 2f)
+    {
+    // Store starting positions
+    Vector2[] startPositions = new Vector2[gameOverEnemies.Count];
+    Vector2[] endPositions = new Vector2[gameOverEnemies.Count];
+    
+    for (int i = 0; i < gameOverEnemies.Count; i++)
+    {
+        if (gameOverEnemies[i] == null) continue;
+        
+        startPositions[i] = gameOverEnemies[i].transform.position;
+        
+        // Calculate position 1 unit shy of target
+        Vector2 direction = (playerPosition - startPositions[i]).normalized;
+        endPositions[i] = playerPosition - direction * 1f;
+    }
+    
+    // Move all enemies simultaneously
+    float elapsed = 0f;
+    
+    while (elapsed < duration)
+    {
+        elapsed += Time.deltaTime;
+        float t = elapsed / duration;
+        
+        for (int i = 0; i < gameOverEnemies.Count; i++)
+        {
+            if (gameOverEnemies[i] == null) continue;
+            
+            gameOverEnemies[i].transform.position = Vector3.Lerp(
+                startPositions[i], 
+                endPositions[i], 
+                t
+            );
+        }
+        
+        yield return null;
+    }
     }
 }

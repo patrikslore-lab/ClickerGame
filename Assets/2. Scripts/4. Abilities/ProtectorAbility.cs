@@ -18,6 +18,7 @@ public class ProtectorAbility : BaseAbility, IAbility
     private float timer;
     private bool isActive;
     private Coroutine circleCoroutine;
+    public bool IsUnlocked => playerConfig != null && playerConfig.protectorUnlocked;
 
     private void Awake()
     {

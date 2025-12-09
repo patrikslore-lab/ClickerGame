@@ -1,6 +1,8 @@
 // LevelManager.cs
 using UnityEngine;
 using System.Linq;
+using System.Collections;
+using Unity.VisualScripting;
 
 /// <summary>
 /// Singleton manager for level lifecycle.
@@ -20,6 +22,9 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LootController lootController;
     [SerializeField] private LanternController lanternController;
     [SerializeField] private DoorController doorController;
+    [SerializeField] private GameOverSequenceController gameOverSequenceController;
+
+    [SerializeField] Vector2 playerPosition = new Vector2 (0, -7);
 
     private RoomConfig currentRoomConfig;
     private PlayerConfig playerConfig;
@@ -162,11 +167,8 @@ public class LevelManager : MonoBehaviour
     // PUBLIC API - OTHER
     //===========================================
 
-    public LevelIntroController GetIntroController()
-    {
-        return introController;
-    }
-
+    public LevelIntroController GetIntroController() => introController;
+    public GameOverSequenceController GetGameOverSequenceController() => gameOverSequenceController;
     public RoomConfig GetCurrentRoomConfig() => currentRoomConfig;
 
     //===========================================
@@ -215,5 +217,18 @@ public class LevelManager : MonoBehaviour
         }
 
         Debug.Log($"Destroyed {enemyCount} enemies and {loot.Length} loot items");
+    }
+
+    //=====================================================
+    //GAMEOVER SEQUENCE ORCHESTRATORS
+    //=====================================================
+    public IEnumerator SpawnGameOverEnemies()
+    {
+        yield return enemySpawnController?.SpawnGameOverWave();
+    }
+
+    public IEnumerator ConvergeOnPlayer()
+    {
+        yield return enemySpawnController.ConvergeOnPlayer(playerPosition, 2);
     }
 }

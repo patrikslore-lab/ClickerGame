@@ -9,4 +9,5 @@ public interface IAbility
 {
     void Activate();
     void Deactivate();
+    bool IsUnlocked { get; }
 }

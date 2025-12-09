@@ -23,6 +23,10 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] public TextMeshProUGUI juneCooldownTextBox;
 
+    [SerializeField] private GameObject ricochetUIGroup;
+    [SerializeField] private GameObject looterUIGroup;
+    [SerializeField] private GameObject protectorUIGroup;
+
     [SerializeField] private Image RicochetOnImage;
     [SerializeField] private Image RicochetCooldownImage;
     [SerializeField] private Image RicochetAvailableImage;
@@ -75,6 +79,8 @@ public class UIManager : MonoBehaviour
         {
             Debug.LogError("PlayerConfig is null! Assign it in GameManager Inspector.");
         }
+        
+        RefreshAbilityUI();
     }
 
     void Update()
@@ -174,6 +180,15 @@ public class UIManager : MonoBehaviour
             Debug.LogError("UIManager: gradePopupPrefab is missing GradePopup component!");
             Destroy(popup);
         }
+    }
+
+    public void RefreshAbilityUI()
+    {
+        if (playerConfig == null) return;
+        
+        ricochetUIGroup?.SetActive(playerConfig.ricochetUnlocked);
+        looterUIGroup?.SetActive(playerConfig.looterUnlocked);
+        protectorUIGroup?.SetActive(playerConfig.protectorUnlocked);
     }
 
     public void RicochetActivate()
@@ -307,5 +322,10 @@ public class UIManager : MonoBehaviour
         }
 
         canvasGroup.alpha = 1f;
+    }
+
+    public void OnGameOverSequenceComplete()
+    {
+        gameOverPanel.SetActive(true);
     }
 }

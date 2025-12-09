@@ -111,6 +111,13 @@ public class AbilityController : MonoBehaviour
     public void TryActivateAbility(IAbility ability)
     {
         if (ability == null) return;
+        
+        // Check if ability is unlocked
+        if (!ability.IsUnlocked)
+        {
+            Debug.Log($"{ability.GetType().Name} is locked!");
+            return;
+        }
 
         // Deactivate if already active (toggle off)
         if ((Object)activeAbility == (Object)ability)

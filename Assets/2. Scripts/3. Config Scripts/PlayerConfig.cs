@@ -36,6 +36,11 @@ public class PlayerConfig : ScriptableObject
     public float bringerOfDeathLightRewardRate = 1f;
     public float crowooonLightRewardRate = 1f;
 
+    [Header("Ability Unlocks")]
+    public bool ricochetUnlocked = false;
+    public bool looterUnlocked = false;
+    public bool protectorUnlocked = false;
+
     [Header("June Stats")]
     public float juneCooldown = 20f;
     public Vector3 juneHomePosition = new Vector3(-5f, 3f, 0f);

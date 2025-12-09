@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerConfig
   m_EditorClassIdentifier: Assembly-CSharp::PlayerConfig
   corePieces: 116
-  wood: 1016
+  wood: 100
   currentLevel: 0
   ricochetMaxActiveTime: 20
   looterMaxActiveTime: 100
@@ -28,6 +28,9 @@ MonoBehaviour:
   flyingRatLightRewardRate: 2
   bringerOfDeathLightRewardRate: 4
   crowooonLightRewardRate: 1
+  ricochetUnlocked: 1
+  looterUnlocked: 0
+  protectorUnlocked: 0
   juneCooldown: 20
   juneHomePosition: {x: -6, y: -8, z: 0}
   juneIdleMovementRadius: 0.5

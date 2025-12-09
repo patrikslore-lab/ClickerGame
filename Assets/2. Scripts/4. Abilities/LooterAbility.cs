@@ -13,6 +13,7 @@ public class LooterAbility : BaseAbility, IAbility
     private AbilityController abilityController;
     private float timer;
     private bool isActive;
+    public bool IsUnlocked => playerConfig != null && playerConfig.looterUnlocked;
 
     private void Awake()
     {

@@ -12,6 +12,7 @@ public class RicochetAbility : BaseAbility, IAbility
     private JuneCharacter june;
     private float timer;
     private bool isActive;
+    public bool IsUnlocked => playerConfig != null && playerConfig.ricochetUnlocked;
 
     private void Start()
     {

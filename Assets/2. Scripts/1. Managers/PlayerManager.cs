@@ -14,12 +14,8 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private UpgradeController upgradeController;
     [SerializeField] private DoggySpawnController doggySpawnController;
     [SerializeField] private float doggyCost;
+    [SerializeField] private float ricochetCost;
 
-    public enum abilityUnlocked
-    {
-        abilityUnlocked,
-        abilityLocked
-    }
 
     [Header("June")]
     [SerializeField] private GameObject juneGameObject;  // The June GameObject in scene
@@ -80,11 +76,8 @@ public class PlayerManager : MonoBehaviour
     //===========================================
     // PUBLIC API - ABILITIES (Delegate to AbilityController)
     //===========================================
-
-    /// <summary>
     /// Called by abilities when they finish (expired or manually).
     /// Delegates to AbilityController.
-    /// </summary>
     public void OnAbilityFinished()
     {
         abilityController?.OnAbilityFinished();
@@ -98,11 +91,48 @@ public class PlayerManager : MonoBehaviour
     {
         abilityController?.OnEnemyHit(enemy);
     }
+    //==========================================
+    // ABILITY UNLOCKERS
+    //===========================================
+
+    //CURRENTLY CONFIGURED TO BE BOUGHT FROM SHOP - IF UNLOCKED FOR FREE NEEDS TO BE CHANGED
+    public void UnlockRicochet()
+    {
+        if (playerConfig.wood >= ricochetCost && playerConfig.ricochetUnlocked == false)
+        {
+        playerConfig.ricochetUnlocked = true;
+        UIManager.Instance?.RefreshAbilityUI();
+        upgradeController.PayRicochetPrice(ricochetCost);
+        Debug.Log("Ricochet ability unlocked!");
+        }
+        else if (playerConfig.ricochetUnlocked)
+        {
+            Debug.Log("Ricochet already unlocked!");
+        }
+        else
+        {
+            Debug.Log("Not enough wood to unlock Ricochet!");
+        }
+
+    }
+
+    public void UnlockLooter()
+    {
+        playerConfig.looterUnlocked = true;
+        UIManager.Instance?.RefreshAbilityUI();
+        Debug.Log("Looter ability unlocked!");
+    }
+
+    public void UnlockProtector()
+    {
+        playerConfig.protectorUnlocked = true;
+        UIManager.Instance?.RefreshAbilityUI();
+        Debug.Log("Protector ability unlocked!");
+    }
 
     //===========================================
     // PUBLIC API - UPGRADES
     //===========================================
-
     public void BuyDoggy()
     {
         if (playerConfig.wood >= doggyCost)

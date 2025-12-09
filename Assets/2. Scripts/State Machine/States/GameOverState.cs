@@ -15,15 +15,16 @@ namespace GameStateMachine
         {
             Debug.Log("Entering GameOver State");
 
+            GameOverSequenceController GOSController = LevelManager.Instance.GetGameOverSequenceController();
+            
+            GOSController.PlayGameOverSequence();
+
             // Show game over UI
             if (UIManager.Instance != null)
             {
                 UIManager.Instance.HideAllPanels();
                 UIManager.Instance.gameOverPanel?.SetActive(true);
             }
-
-            // Stop time
-            Time.timeScale = 0f;
         }
 
         public void Update()

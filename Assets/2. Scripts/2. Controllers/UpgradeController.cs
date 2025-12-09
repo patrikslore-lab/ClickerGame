@@ -13,4 +13,9 @@ public class UpgradeController : MonoBehaviour
     {
          playerConfig.wood -= doggyCost;
     }
+
+    public void PayRicochetPrice(float ricochetPrice)
+    {
+        playerConfig.wood -= ricochetPrice;
+    }
 }
