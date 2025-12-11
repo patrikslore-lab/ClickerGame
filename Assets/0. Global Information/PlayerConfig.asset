@@ -28,7 +28,7 @@ MonoBehaviour:
   flyingRatLightRewardRate: 2
   bringerOfDeathLightRewardRate: 4
   crowooonLightRewardRate: 1
-  ricochetUnlocked: 1
+  ricochetUnlocked: 0
   looterUnlocked: 0
   protectorUnlocked: 0
   juneCooldown: 20

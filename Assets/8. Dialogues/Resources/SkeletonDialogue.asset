@@ -16,15 +16,6 @@ MonoBehaviour:
   - position: 0
     speaker: {fileID: 11400000, guid: d6ab9557509a650469a46035bbecabdc, type: 2}
     emotion: 0
-    text: Don't pee on me PLEASE
-    autoAdvanceTime: 0
-  - position: 1
-    speaker: {fileID: 11400000, guid: d6ab9557509a650469a46035bbecabdc, type: 2}
-    emotion: 0
-    text: Don't pee on me PLEASE
-    autoAdvanceTime: 0
-  - position: 0
-    speaker: {fileID: 11400000, guid: d6ab9557509a650469a46035bbecabdc, type: 2}
-    emotion: 0
-    text: Don't pee on me PLEASE
+    text: How many times do I have to tell you - please STOP PLAYING VIDEO GAMES!!!!
+      I can't stand to watch you waste your life away!!!
     autoAdvanceTime: 0
