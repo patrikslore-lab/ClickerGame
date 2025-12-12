@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
   roomNumber: 2
   roomSprite: {fileID: 5830712228245648474, guid: c4a79a4eb51aa4b4f9214e61b73c5380, type: 3}
+  levelGameObject: {fileID: 3191661585972677632, guid: 752acb5d73b872844879f8fd3c615df8, type: 3}
   door: {fileID: 4777360585535520036, guid: 84f08c06eabab5d4e8fb11f346359434, type: 3}
   enemySpawns: []
   minX: -8

@@ -23,6 +23,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private LanternController lanternController;
     [SerializeField] private DoorController doorController;
     [SerializeField] private GameOverSequenceController gameOverSequenceController;
+    [SerializeField] private RoomController roomController;
 
     [SerializeField] Vector2 playerPosition = new Vector2 (0, -7);
 
@@ -61,9 +62,9 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        if (levelSpriteRenderer != null && currentRoomConfig.RoomSprite != null)
+        if (roomController != null && currentRoomConfig.levelGameObject != null)
         {
-            levelSpriteRenderer.sprite = currentRoomConfig.RoomSprite;
+            roomController.InstantiateRoomGameObject();
         }
 
         doorController.InstantiateDoor();
@@ -77,18 +78,11 @@ public class LevelManager : MonoBehaviour
         Debug.Log("Loading Base Area");
 
         playerConfig.lightHealthCurrent = playerConfig.lightHealthMax;
-
-        RoomConfig baseConfig = Resources.Load<RoomConfig>("Rooms/BASE");
-
-        playerConfig.currentLevel = 0;
-
-        if (baseConfig != null && levelSpriteRenderer != null && baseConfig.RoomSprite != null)
-        {
-            levelSpriteRenderer.sprite = baseConfig.RoomSprite;
-        }
-
+        currentRoomConfig = Resources.Load<RoomConfig>("Rooms/BASE");
         StopCombatSession();
         DestroyAllCombatObjects();
+        playerConfig.currentLevel = 0;
+        roomController.InstantiateRoomGameObject();
     }
 
     public void StartCombatSession()

@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
   roomNumber: 0
   roomSprite: {fileID: 21300000, guid: 52881e50034310b46a2f4a140f23e59b, type: 3}
-  waveSequence: []
-  delayBetweenWaves: 0.5
+  levelGameObject: {fileID: 3191661585972677632, guid: ddc87e108a0127148a8840eec93a0951, type: 3}
+  door: {fileID: 0}
+  enemySpawns: []
   minX: -8
   maxX: 8
   minY: -4

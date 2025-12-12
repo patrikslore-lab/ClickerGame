@@ -26,7 +26,9 @@ public class RoomConfig : ScriptableObject
     }
 
     [SerializeField] private int roomNumber;
-    [SerializeField] private Sprite roomSprite;
+    [SerializeField] public Sprite roomSprite;
+
+    [SerializeField] public GameObject levelGameObject;
 
     [SerializeField] public GameObject door;
 
