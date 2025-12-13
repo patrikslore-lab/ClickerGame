@@ -16,15 +16,135 @@ MonoBehaviour:
   roomSprite: {fileID: 5830712228245648474, guid: c4a79a4eb51aa4b4f9214e61b73c5380, type: 3}
   levelGameObject: {fileID: 3191661585972677632, guid: 752acb5d73b872844879f8fd3c615df8, type: 3}
   door: {fileID: 4777360585535520036, guid: 84f08c06eabab5d4e8fb11f346359434, type: 3}
-  enemySpawns: []
-  minX: -8
+  enemySpawns:
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 1.5
+    doorBreakOnDefeat: 1
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 2.5
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 1.5
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 2.5
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 1.5
+    doorBreakOnDefeat: 2
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 1
+    delayBetweenEnemies: 0
+    delayBeforeNext: 2.5
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 0
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  - enemyPrefab: {fileID: 4375849248057608108, guid: 87afbd770ad68484f9d5c5a664b15fb5, type: 3}
+    spawnCount: 2
+    delayBetweenEnemies: 0.1
+    delayBeforeNext: 3
+    doorBreakOnDefeat: 3
+    dialogueBeforeWave: {fileID: 0}
+    dialogueAfterSpawning: {fileID: 0}
+    dialogueAfterWave: {fileID: 0}
+  minX: -5.8
   maxX: 8
   minY: -4
-  maxY: 4
+  maxY: 5.8
   spawnZ: -1
   woodSpawnFrequencySeconds: 1
   lootMinX: -6
   lootMaxX: 6
-  lootMinY: -3
+  lootMinY: -6
   lootMaxY: 3
   lootSpawnZ: -2

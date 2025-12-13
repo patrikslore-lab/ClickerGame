@@ -52,12 +52,24 @@ public class EnemySpawnController : MonoBehaviour
                 continue;
             }
 
+            // Trigger "before wave" dialogue if configured
+            if (spawn.dialogueBeforeWave != null)
+            {
+                TriggerDialogue(spawn.dialogueBeforeWave);
+            }
+
             List<Enemy> spawnGroup = new List<Enemy>();
 
             for (int j = 0; j < spawn.spawnCount; j++)
             {
                 Vector3 position = CalculateSpawnPosition();
                 GameObject enemyObj = Instantiate(spawn.enemyPrefab, position, Quaternion.identity);
+
+                // Trigger "after spawning" dialogue after first enemy is instantiated
+                if (j == 0 && spawn.dialogueAfterSpawning != null)
+                {
+                    TriggerDialogue(spawn.dialogueAfterSpawning);
+                }
 
                 if (spawn.doorBreakOnDefeat != RoomConfig.DoorBreakTrigger.None)
                 {
@@ -74,6 +86,12 @@ public class EnemySpawnController : MonoBehaviour
             if (spawn.doorBreakOnDefeat != RoomConfig.DoorBreakTrigger.None && spawnGroup.Count > 0)
             {
                 StartCoroutine(MonitorForDoorBreak(spawnGroup, spawn.doorBreakOnDefeat));
+            }
+
+            // Trigger "after wave" dialogue if configured
+            if (spawn.dialogueAfterWave != null)
+            {
+                StartCoroutine(MonitorForWaveDefeatDialogue(spawnGroup, spawn.dialogueAfterWave));
             }
 
             if (i < roomConfig.EnemySpawns.Count - 1 && spawn.delayBeforeNext > 0)
@@ -104,6 +122,34 @@ public class EnemySpawnController : MonoBehaviour
             }
 
             yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private IEnumerator MonitorForWaveDefeatDialogue(List<Enemy> enemies, DialogueData dialogue)
+    {
+        while (true)
+        {
+            enemies.RemoveAll(e => e == null);
+
+            if (enemies.Count == 0)
+            {
+                TriggerDialogue(dialogue);
+                yield break;
+            }
+
+            yield return new WaitForSeconds(0.1f);
+        }
+    }
+
+    private void TriggerDialogue(DialogueData dialogue)
+    {
+        if (dialogue == null) return;
+
+        // Trigger dialogue through UIManager singleton
+        if (UIManager.Instance != null)
+        {
+            UIManager.Instance.StartDialogue(dialogue);
+            Debug.Log($"Triggered dialogue: {dialogue.name}");
         }
     }
 

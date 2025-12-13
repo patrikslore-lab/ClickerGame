@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PlayerSpeakerConfig
   m_EditorClassIdentifier: Assembly-CSharp::SpeakerData
   speakerName: August
-  defaultPortrait: {fileID: 21300000, guid: abbf98c3fe1519e49ba92935ad4e8764, type: 3}
+  defaultPortrait: {fileID: 21300000, guid: 641463ef0cb533e4a93f52bd919e0cf9, type: 3}
   portraitVariants:
   - emotion: 0
-    portrait: {fileID: 21300000, guid: abbf98c3fe1519e49ba92935ad4e8764, type: 3}
+    portrait: {fileID: 21300000, guid: 641463ef0cb533e4a93f52bd919e0cf9, type: 3}

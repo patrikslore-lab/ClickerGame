@@ -36,5 +36,5 @@ MonoBehaviour:
   juneIdleMovementRadius: 0.5
   juneIdleMovementSpeed: 1
   juneMoveSpeed: 40
-  lightHealthCurrent: 60
+  lightHealthCurrent: 59.129967
   lightHealthMax: 60

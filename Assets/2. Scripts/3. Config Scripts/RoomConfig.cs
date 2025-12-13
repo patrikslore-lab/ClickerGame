@@ -23,6 +23,14 @@ public class RoomConfig : ScriptableObject
         [Min(0)] public float delayBeforeNext = 2f;
         [Tooltip("Trigger door break when all enemies in this spawn group are defeated")]
         public DoorBreakTrigger doorBreakOnDefeat = DoorBreakTrigger.None;
+
+        [Header("Wave Dialogue (Optional)")]
+        [Tooltip("Dialogue to play BEFORE this wave spawns")]
+        public DialogueData dialogueBeforeWave;
+        [Tooltip("Dialogue to play AFTER the first enemy is instantiated")]
+        public DialogueData dialogueAfterSpawning;
+        [Tooltip("Dialogue to play AFTER this wave is defeated")]
+        public DialogueData dialogueAfterWave;
     }
 
     [SerializeField] private int roomNumber;

@@ -10,21 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b7293824e93134b418407416242cc7f1, type: 3}
-  m_Name: SkeletonDialogue
+  m_Name: FirstRoomEndDialogue
   m_EditorClassIdentifier: Assembly-CSharp::DialogueData
   lines:
   - position: 0
     speaker: {fileID: 11400000, guid: d6ab9557509a650469a46035bbecabdc, type: 2}
     emotion: 0
-    text: You gonna buy something?
-    autoAdvanceTime: 0
-  - position: 1
-    speaker: {fileID: 11400000, guid: 709411ccfd395c34d912148dac40b2dc, type: 2}
-    emotion: 0
-    text: What's it to you stinkbug
-    autoAdvanceTime: 0
-  - position: 0
-    speaker: {fileID: 11400000, guid: d6ab9557509a650469a46035bbecabdc, type: 2}
-    emotion: 0
-    text: You wanna get bottled son?
-    autoAdvanceTime: 0
+    text: you did it! I'm soooo proud . . .
+    autoAdvanceTime: 1
