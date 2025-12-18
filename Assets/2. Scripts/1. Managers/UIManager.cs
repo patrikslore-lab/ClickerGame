@@ -41,12 +41,10 @@ public class UIManager : MonoBehaviour
 
     [Header("Grade Popup System")]
     [SerializeField] private bool enableGradePopups = true;
-    [SerializeField] private GameObject gradePopupPrefab;
-    [SerializeField] private Sprite sRankSprite;
-    [SerializeField] private Sprite aRankSprite;
-    [SerializeField] private Sprite bRankSprite;
-    [SerializeField] private Sprite cRankSprite;
-    [SerializeField] private Sprite dRankSprite;
+    [SerializeField] private GameObject sRankSprite;
+    [SerializeField] private GameObject aRankSprite;
+    [SerializeField] private GameObject bRankSprite;
+    [SerializeField] private GameObject cRankSprite;
     private PlayerConfig playerConfig;
     [SerializeField] private DialogueUIController dialogueController;
     public void StartDialogue(DialogueData data) => dialogueController?.StartDialogue(data);
@@ -148,19 +146,12 @@ public class UIManager : MonoBehaviour
     {
         if (!enableGradePopups) return;
 
-        if (gradePopupPrefab == null)
-        {
-            Debug.LogError("UIManager: gradePopupPrefab not assigned!");
-            return;
-        }
-
-        Sprite gradeSprite = grade switch
+        GameObject gradeSprite = grade switch
         {
             ReactionGrade.Grade.S => sRankSprite,
             ReactionGrade.Grade.A => aRankSprite,
             ReactionGrade.Grade.B => bRankSprite,
             ReactionGrade.Grade.C => cRankSprite,
-            ReactionGrade.Grade.D => dRankSprite,
             _ => null
         };
 
@@ -170,11 +161,11 @@ public class UIManager : MonoBehaviour
             return;
         }
 
-        GameObject popup = Instantiate(gradePopupPrefab, worldPosition, Quaternion.identity);
+        GameObject popup = Instantiate(gradeSprite, worldPosition, Quaternion.identity);
         GradePopup gradePopupComponent = popup.GetComponent<GradePopup>();
         if (gradePopupComponent != null)
         {
-            gradePopupComponent.Initialize(gradeSprite, worldPosition);
+            gradePopupComponent.Initialize(worldPosition);
         }
         else
         {
