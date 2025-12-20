@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Room_1
   m_EditorClassIdentifier: Assembly-CSharp::RoomConfig
   roomNumber: 1
-  roomSprite: {fileID: 2707200778260496344, guid: 9c5bb1b92679fca4680bdd2bbdc5a1be, type: 3}
-  levelGameObject: {fileID: 3191661585972677632, guid: fe90e4d359e09f74a8734199ff834322, type: 3}
+  roomSprite: {fileID: 21300000, guid: 52881e50034310b46a2f4a140f23e59b, type: 3}
+  levelGameObject: {fileID: 3191661585972677632, guid: 4dc7a96137150e54ea8c7974e44bb141, type: 3}
   door: {fileID: 4777360585535520036, guid: 84f08c06eabab5d4e8fb11f346359434, type: 3}
   enemySpawns:
   - enemyPrefab: {fileID: 4375849248057608108, guid: a813d1a1865b9a946a446da5e330aa92, type: 3}

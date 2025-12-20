@@ -38,6 +38,12 @@ public class Enemy : MonoBehaviour
         ReactionGrade.Grade grade = ReactionGrade.CalculateGrade(timeTaken);
         UIManager.Instance?.SpawnGradePopup(grade, transform.position + new Vector3(1,1,0));
 
+        // Spawn saturation wave on S-rank (perfect) kills
+        if (grade == ReactionGrade.Grade.S)
+        {
+            LevelManager.Instance?.GetSaturationWaveController()?.SpawnWave(transform.position);
+        }
+
         // Notify listeners (CurrencyManager, UIManager, etc.)
         EventManager.Instance.TriggerClickTimeTaken(timeTaken);
 

@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private DoorController doorController;
     [SerializeField] private GameOverSequenceController gameOverSequenceController;
     [SerializeField] private RoomController roomController;
+    [SerializeField] private SaturationWaveController saturationWaveController;
 
     [SerializeField] Vector2 playerPosition = new Vector2 (0, -7);
 
@@ -164,6 +165,7 @@ public class LevelManager : MonoBehaviour
     public LevelIntroController GetIntroController() => introController;
     public GameOverSequenceController GetGameOverSequenceController() => gameOverSequenceController;
     public RoomConfig GetCurrentRoomConfig() => currentRoomConfig;
+    public SaturationWaveController GetSaturationWaveController() => saturationWaveController;
 
     //===========================================
     // STATE CONTROL

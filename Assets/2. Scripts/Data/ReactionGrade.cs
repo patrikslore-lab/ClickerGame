@@ -16,10 +16,10 @@ public class ReactionGrade
         D   // > 1200ms
     }
     // Grade thresholds (in milliseconds)
-    public const float S_RANK_THRESHOLD = 500f;
-    public const float A_RANK_THRESHOLD = 750f;
-    public const float B_RANK_THRESHOLD = 1000f;
-    public const float C_RANK_THRESHOLD = 1200f;
+    public const float S_RANK_THRESHOLD = 1000f;
+    public const float A_RANK_THRESHOLD = 1200f;
+    public const float B_RANK_THRESHOLD = 1500f;
+    public const float C_RANK_THRESHOLD = 2000f;
 
     /// <summary>
     /// Calculate grade from reaction time in milliseconds
